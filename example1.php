@@ -111,24 +111,53 @@ function handle_record(array $bytes): void {
     }
 }
 
-$rec_count = 0;
-try {
-    $fh = fopen($gdspath, 'rb');
-    while (true) {
-        $bytes = next_bytearray($fh);
-        if (count($bytes) == 0) {
-            break;
-        }
-        handle_record($bytes);
-        $rec_count++;
-    }
-}
-catch (Exception $e) {
-    var_dump($e);
-}
-finally {
-    fclose($fh);
-}
-echo $rec_count, "\n";
 
-var_dump($HEADER_MAP);
+function extract_s16_array(array $bytes): array {
+    // TODO: implement
+    return [];
+}
+
+
+function extract_s32_array(array $bytes): array {
+    // TODO: implement
+    return [];
+}
+
+
+function extract_ascii(array $bytes): string {
+    // TODO: implement
+    return '';
+}
+
+
+function extract_bitmask(array $bytes): int {
+    // TODO: implement
+    return 0;
+}
+
+
+function read_stream(string $gdspath): void {
+    $rec_count = 0;
+    try {
+        $fh = fopen($gdspath, 'rb');
+        while (true) {
+            $bytes = next_bytearray($fh);
+            if (count($bytes) == 0) {
+                break;
+            }
+            handle_record($bytes);
+            $rec_count++;
+        }
+    }
+    catch (Exception $e) {
+        var_dump($e);
+    }
+    finally {
+        fclose($fh);
+    }
+    echo $rec_count, "\n";
+
+}
+
+read_stream($gdspath);
+
