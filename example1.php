@@ -205,18 +205,18 @@ function read_real8(array $bytes): float {
     $sign = $bytes[0] & 0x80;
     $exponent = ($bytes[0] & 0x7f) - 64; 
     $mantissa_int = 0;
-
     for ($i = 1; $i < 8; $i++) {
         $mantissa_int <<= 8;
         $mantissa_int += $bytes[$i];
     }
     $mantissa_float = ($mantissa_int * 1.0 / POW_2_56);
     $result = $mantissa_float * (16 ** $exponent);
-    if ($sign)
+    if ($sign) {
         $result = -$result;
-
-    return $result;
+    }
+  return $result;
 }
+
 
 function extract_int2_array(array $bytes): array {
     assert(count($bytes) % 2 == 0);
@@ -272,7 +272,7 @@ function handle_record(array $bytes): void {
     $data_type = $bytes[2];
     $data = array_slice($bytes, 2);
     assert(count($data) % 2 == 0);
-    var_dump([header_symbol($rec_type), $data]);
+    //    var_dump([header_symbol($rec_type), $data]);
     $int2_array = [];
     $int4_array = [];
     $ascii = '';
@@ -281,15 +281,15 @@ function handle_record(array $bytes): void {
     switch ($data_type) {
     case INT2:
         $int2_array = extract_int2_array($data);
-        var_dump($int2_array);
+        // var_dump($int2_array);
         break;
     case INT4:
         $int4_array = extract_int4_array($data);
-        var_dump($int4_array);
+        // var_dump($int4_array);
         break;
     case REAL8:
         $real8_array = extract_real8_array($data);
-        var_dump($real8_array);
+        // var_dump($real8_array);
         break;
     case BIT_ARRAY:
         $bitmask = extract_bitmask($data);
@@ -320,7 +320,7 @@ function read_stream(string $gdspath): void {
         }
     }
     catch (Exception $e) {
-        var_dump($e);
+        // var_dump($e);
     }
     finally {
         fclose($fh);
@@ -330,4 +330,3 @@ function read_stream(string $gdspath): void {
 }
 
 read_stream($gdspath);
-
