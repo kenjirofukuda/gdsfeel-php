@@ -1,5 +1,7 @@
 <?php
 
+const GDS_EOL   = PHP_EOL;
+
 // DATA TYPE
 const NO_DATA   = 0;
 const BIT_ARRAY = 1;
@@ -145,7 +147,7 @@ if (! file_exists($gdspath)) {
     echo "Not found: $gdspath";
     exit(2);
 }
-echo $gdspath, "\n";
+echo $gdspath, GDS_EOL;
 
 const USHORT_SIZE = 2;
 
@@ -160,7 +162,7 @@ function get_record_size($fh): int {
 function next_bytearray($fh): array {
     $rec_size = get_record_size($fh);
     if ($rec_size <= 0) {
-        echo "empty record size", "\n";
+        echo "empty record size", GDS_EOL;
         return [];
     }
     $temp = fread($fh, $rec_size);
@@ -214,7 +216,7 @@ function read_real8(array $bytes): float {
     if ($sign) {
         $result = -$result;
     }
-  return $result;
+    return $result;
 }
 
 
@@ -296,7 +298,7 @@ function handle_record(array $bytes): void {
         break;
     case ASCII:
         $ascii = extract_ascii($data);
-        echo $ascii, "\n";
+        echo $ascii, GDS_EOL;
         break;
     }
     switch ($rec_type) {
@@ -320,12 +322,12 @@ function read_stream(string $gdspath): void {
         }
     }
     catch (Exception $e) {
-        // var_dump($e);
+        var_dump($e);
     }
     finally {
         fclose($fh);
     }
-    echo $rec_count, "\n";
+    echo $rec_count, GDS_EOL;
 
 }
 
