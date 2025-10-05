@@ -1,0 +1,30 @@
+#struclist {
+/*  background-color: cyan;*/
+  float: left;
+}
+#elementlist {
+/*  background-color: yellow;*/
+  float: left;
+}
+.scroll_lists {
+  height: 600px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.no-bullets {
+  font-family: monospace, serif;
+  list-style: none;
+  padding-left: 0;
+}
+listing {
+  font-family: monospace, serif;
+}
+
+.customList1 .nav-list-vivid>li>a {
+    border-bottom: 1px solid #dedede
+}
+
+.customList1 .nav-list-vivid>li>a:hover {
+    background-color: #1abc9c;
+    color: #fff
+}

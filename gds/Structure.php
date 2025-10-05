@@ -11,7 +11,9 @@ require_once 'Element.php';
  */
 class Structure {
     public string $name;
-    private array $elements = [];
+    
+    public array $elements = [];
+    
     private int $elkey = 0;
     
     function addElement(Element $element) {

@@ -55,11 +55,12 @@ function read_int4(array $bytes): int {
     return $result;
 }
 
+
 const POW_2_56 = 2 ** 56;
 
 function read_real8(array $bytes): float {
     $sign = $bytes[0] & 0x80;
-    $exponent = ($bytes[0] & 0x7f) - 64; 
+    $exponent = ($bytes[0] & 0x7f) - 64;
     $mantissa_int = 0;
     for ($i = 1; $i < 8; $i++) {
         $mantissa_int <<= 8;
@@ -124,25 +125,70 @@ function extract_bitmask(array $bytes): int {
 
 function one_element_as_atomic(mixed $value): mixed {
     if (is_array($value) && count($value) == 1) {
-        return $value[0];        
+        return $value[0];
     }
     return $value;
 }
 
 
 function check_gds_path(string $gdspath): void {
-    if (! file_exists($gdspath)) {
-        throw new Exception("File not found: $gdspath"); 
+    if (!file_exists($gdspath)) {
+        throw new Exception("File not found: $gdspath");
     }
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $reply = finfo_file($finfo, $gdspath);
     if (str_ends_with($reply, 'x-empty')) {
-        throw new Exception("Empty File: $gdspath"); 
+        throw new Exception("Empty File: $gdspath");
     }
-    if (! str_ends_with($reply, 'octet-stream')) {
+    if (!str_ends_with($reply, 'octet-stream')) {
         // TODO: adhook not strict
-        throw new Exception("Not a GDSII file: $gdspath"); 
+        throw new Exception("Not a GDSII file: $gdspath");
     }
+}
+
+
+function json_decode_class($jsonStr, $className) {
+    $reflClass = new \ReflectionClass($className);
+    $obj = $reflClass->newInstance();
+    $json = json_decode($jsonStr);
+
+    function object_parse($json, $obj) {
+        $reflJson = new \ReflectionObject($json);
+        $props = $reflJson->getProperties(\ReflectionProperty::IS_PUBLIC);
+        foreach ($props as $prop) {
+            if (!is_object($json->{$prop->getName()})) {
+                $obj->{$prop->getName()} = $json->{$prop->getName()};
+                continue;
+            }
+
+            $reflProp = new \ReflectionProperty($obj, $prop->getName());
+            if (!$reflProp) {
+                $obj->{$prop->getName()} = $json->{$prop->getName()};
+                continue;
+            }
+
+            $docComment = $reflProp->getDocComment();
+            $matches = null;
+            preg_match('/(?P<annotation>@var)\s+(?P<typeName>[^\s]+)\s+/m', $docComment, $matches);
+            if (count($matches) <= 0) {
+                $obj->{$prop->getName()} = $json->{$prop->getName()};
+                continue;
+            }
+
+            try {
+                $tmpReflObj = new \ReflectionClass($matches['typeName']);
+            }
+            catch (ReflectionException $exc) {
+                $obj->{$prop->getName()} = $json->{$prop->getName()};
+                continue;
+            }
+            $tmpObj = $tmpReflObj->newInstance();
+
+            $obj->{$prop->getName()} = object_parse($json->{$prop->getName()}, $tmpObj);
+        }
+        return $obj;
+    }
+    return object_parse($json, $obj);
 }
 
 

@@ -150,7 +150,16 @@ if (php_sapi_name() == 'cli') {
     $inform = new Inform();
     $inform->gdspath = $stream_path;
     $inform->run();
-    // print_r($inform->library);
-    // read_stream($stream_path);
+    $lib = $inform->library;
+    $jsonString = json_encode($lib);
+    echo $jsonString, GDS_EOL;
+    $file = realpath(__DIR__ . '/../data.json');
+    echo $file, GDS_EOL;
+    $reply = \file_put_contents($file, $jsonString);
+    if (! $reply) {
+        echo "Write Fail: $file", GDS_EOL;
+    }
+    $lib2 = json_decode_class(\file_get_contents($file), '\gds\Library');
+    print_r($lib2);
 }
 ?>
