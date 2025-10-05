@@ -8,11 +8,12 @@ require_once 'Library.php';
 require_once 'Structure.php';
 
 class Inform {
+
     public string $gdspath;
     public ?Library $library = null;
     public ?Structure $structure = null;
     public ?Element $element = null;
-    
+
     function run(): void {
         $rec_count = 0;
         $fh = null;
@@ -36,8 +37,9 @@ class Inform {
                 fclose($fh);
             }
         }
-        echo "number of records = $rec_count", GDS_EOL;
+        // echo "number of records = $rec_count", GDS_EOL;
     }
+
 
     function handle_record(array $bytes): void {
         $rec_type = $bytes[1];
@@ -51,21 +53,21 @@ class Inform {
         $real8_array = [];
         $detail = null;
         switch ($data_type) {
-        case INT2:
-            $detail = $int2_array = extract_int2_array($data);
-            break;
-        case INT4:
-            $detail = $int4_array = extract_int4_array($data);
-            break;
-        case REAL8:
-            $detail = $real8_array = extract_real8_array($data);
-            break;
-        case BIT_ARRAY:
-            $detail = $bitmask = extract_bitmask($data);
-            break;
-        case ASCII:
-            $detail = $ascii = extract_ascii($data);
-            break;
+            case INT2:
+                $detail = $int2_array = extract_int2_array($data);
+                break;
+            case INT4:
+                $detail = $int4_array = extract_int4_array($data);
+                break;
+            case REAL8:
+                $detail = $real8_array = extract_real8_array($data);
+                break;
+            case BIT_ARRAY:
+                $detail = $bitmask = extract_bitmask($data);
+                break;
+            case ASCII:
+                $detail = $ascii = extract_ascii($data);
+                break;
         }
         $detail = one_element_as_atomic($detail);
         $info = [header_symbol($rec_type)];
@@ -74,61 +76,76 @@ class Inform {
         }
         // print_r($info);
         switch ($rec_type) {
-        case BGNLIB:
-            $this->library = new Library();
-            $this->library->bgnlib = $detail;
-            break;
-        case LIBNAME:
-            $this->library->name = $detail;            
-            break;
-        case UNITS:
-            $this->library->units = $detail;            
-            break;
-        case BGNSTR:
-            $this->structure = new Structure();
-            break;  
-        case STRNAME:
-            $this->structure->name = $detail;
-            break;  
-        case ENDSTR:
-            if ($this->library != null && $this->structure != null) {
-                $this->library->addStructure($this->structure);
-                $this->structure = null;
-            }
-            break;
-        case BOUNDARY:
-        case PATH:
-        case SREF:
-        case AREF:
-        case TEXT:
-            $this->element = new Element();
-            $this->element->type = $rec_type;
-            break;
-        case ENDEL:
-            if ($this->structure != null && $this->element != null) {
-                $this->structure->addElement($this->element);
-                echo $this->element, GDS_EOL;
-                $this->element = null;
-            }
-            break;
+            case BGNLIB:
+                $this->library = new Library();
+                $this->library->bgnlib = $detail;
+                break;
+            case LIBNAME:
+                $this->library->name = $detail;
+                break;
+            case UNITS:
+                $this->library->units = $detail;
+                break;
+            case BGNSTR:
+                $this->structure = new Structure();
+                break;
+            case STRNAME:
+                $this->structure->name = $detail;
+                break;
+            case ENDSTR:
+                if ($this->library != null && $this->structure != null) {
+                    $this->library->addStructure($this->structure);
+                    $this->structure = null;
+                }
+                break;
+            case BOUNDARY:
+            case PATH:
+            case SREF:
+            case AREF:
+            case TEXT:
+                $this->element = new Element();
+                $this->element->type = $rec_type;
+                break;
+
+            case ELKEY:
+                echo "ELKEY: $detail", GDS_EOL;
+                break;
+
+            case STRING:
+                $this->element->string = $detail;
+                break;
+
+            case SNAME:
+                $this->element->sname = $detail;
+                break;
+
+            case ENDEL:
+                if ($this->structure != null && $this->element != null) {
+                    $this->structure->addElement($this->element);
+                    // echo $this->element, GDS_EOL;
+                    $this->element = null;
+                }
+                break;
         }
     }
-    
 }
 
-
-$gdspath = join('/', [getenv('HOME'), 'Nextcloud', 'gds', 'GDSreader.0.3.2','test.gds']);
-if (! file_exists($gdspath)) {
+$gdspath = join('/', [getenv('HOME'), 'Nextcloud', 'gds', 'GDSreader.0.3.2', 'test.gds']);
+if (!file_exists($gdspath)) {
     echo "Not found: $gdspath";
     exit(2);
 }
-echo $gdspath, GDS_EOL;
+// echo $gdspath, GDS_EOL;
 
+function example_gds_path(): string {
+    global $gdspath;
+    return $gdspath;
+}
 
 $stream_path = $gdspath;
 if (php_sapi_name() == 'cli') {
     if ($argc >= 2) {
-        $stream_path = $argv[1];        
+        $stream_path = $argv[1];
     }
     $inform = new Inform();
     $inform->gdspath = $stream_path;
@@ -136,5 +153,4 @@ if (php_sapi_name() == 'cli') {
     // print_r($inform->library);
     // read_stream($stream_path);
 }
-
 ?>

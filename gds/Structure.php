@@ -1,12 +1,6 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace gds;
-
 
 require_once 'Element.php';
 
@@ -17,11 +11,17 @@ require_once 'Element.php';
  */
 class Structure {
     public string $name;
-
     private array $elements = [];
+    private int $elkey = 0;
     
     function addElement(Element $element) {
+        $element->elkey = $this->elkey;
         $this->elements[] = $element;
+        $this->elkey++;
+    }
+    
+    public function elements(): array {
+        return $this->elements;
     }
 }
 
