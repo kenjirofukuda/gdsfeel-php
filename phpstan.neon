@@ -1,0 +1,4 @@
+parameters:
+    paths:
+        - ./gds.php
+    level: 5

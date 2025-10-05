@@ -211,7 +211,7 @@ function read_real8(array $bytes): float {
         $mantissa_int <<= 8;
         $mantissa_int += $bytes[$i];
     }
-    $mantissa_float = ($mantissa_int * 1.0 / POW_2_56);
+    $mantissa_float = $mantissa_int * 1.0 / POW_2_56;
     $result = $mantissa_float * (16 ** $exponent);
     if ($sign) {
         $result = -$result;
