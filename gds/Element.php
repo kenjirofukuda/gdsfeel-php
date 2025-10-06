@@ -14,8 +14,7 @@ class Element implements \Stringable {
     //put your code here
     public int $type;
     public int $elkey = -1;
-    public ?string $sname;
-    public ?string $string;
+    public array $map = [];
 
     public function __toString(): string {
         $items = [header_symbol($this->type), '(', $this->elkey];
@@ -23,11 +22,11 @@ class Element implements \Stringable {
             case SREF:
             case AREF:
                 $items[] = ',';
-                $items[] = "'$this->sname'";
+                $items[] = "'" . $this->map['SNAME']. "'";
                 break;
             case TEXT:
                 $items[] = ',';
-                $items[] = "'$this->string'";
+                $items[] = "'" . $this->map['STRING']. "'";
                 break;
         }
         $items[] = ')';

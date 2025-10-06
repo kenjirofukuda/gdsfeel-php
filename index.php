@@ -20,10 +20,19 @@ else {
 
 $struc_name = filter_input(INPUT_GET, 's', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($struc_name) {
-    // echo "<h1>param</h1>";
-    // echo "<p>" . $struc_name . "</p>";
     if (!$lib->hasStructureName($struc_name)) {
         $struc_name = null;
+    }
+}
+
+$elkey = -1;
+$structure = null;
+$element = null;
+if ($struc_name) {
+    $structure = $lib->structureNamed($struc_name);
+    $elkey = filter_input(INPUT_GET, 'e', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if ($elkey) {
+        $element = $structure->elementAtElKey($elkey);
     }
 }
 ?>
@@ -32,10 +41,7 @@ if ($struc_name) {
   <head>
     <meta charset="UTF-8">
     <title>GdsFeel</title>
-    <!-- <link rel="stylesheet" href="./css/styles.css"> -->
-    <style>
-<?php include_once './css/styles.css'; ?>
-    </style>
+    <link rel="stylesheet" href="./css/styles.css">
   </head>
   <body>
     <?php
@@ -44,7 +50,6 @@ if ($struc_name) {
     }
     else {
         $head = $lib->name;
-        echo "<p> Not Found: " . $struc_name . "</p>";        
     }
     ?>
 
@@ -67,11 +72,24 @@ if ($struc_name) {
             echo '<ul class="no-bullets nav-list-vivid">', PHP_EOL;
             $struc = $lib->structureNamed($struc_name);
             foreach ($struc->elements() as $el) {
-                echo "<li>" . $el . "</li>", PHP_EOL;
+                $attr = [];
+                $attr['s'] = $struc_name;
+                $attr['e'] = $el->elkey;
+                echo '<li><a href="./index.php?' . http_build_query($attr) . '">' . $el . "</a></li>", PHP_EOL;
             }
             echo "</ul>", PHP_EOL;
         }
         ?>
+      </div>
+
+      <div id="elementinspector">
+        <pre><code>
+        <?php
+          if ($element) {
+              echo print_r($element);
+          }
+        ?>
+        </code></pre>
       </div>
     </div>
   </body>

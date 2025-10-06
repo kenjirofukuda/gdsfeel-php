@@ -105,20 +105,35 @@ class Inform {
             case SREF:
             case AREF:
             case TEXT:
+            case NODE:
+            case BOX:
                 $this->element = new Element();
                 $this->element->type = $rec_type;
                 break;
 
             case ELKEY:
-                echo "ELKEY: $detail", GDS_EOL;
+                $this->element->elkey = $detail;
                 break;
-
+            case XY:
+            case LAYER:
+            case ELFLAGS:
+            case PLEX:
+            case DATATYPE:
+            case PATHTYPE:
+            case TEXTTYPE:
+            case NODETYPE:
+            case BOXTYPE:
             case STRING:
-                $this->element->string = $detail;
-                break;
-
+            case COLROW:
+            case STRANS:
+            case MAG:
+            case PLEX:
+            case ANGLE:
+            case PRESENTATION:
+            case PROPATTR:
+            case PROPVALUE:
             case SNAME:
-                $this->element->sname = $detail;
+                $this->element->map[header_symbol($rec_type)] = $detail;
                 break;
 
             case ENDEL:
@@ -137,6 +152,7 @@ if (!file_exists($gdspath)) {
     echo "Not found: $gdspath";
     exit(2);
 }
+
 // echo $gdspath, GDS_EOL;
 
 function example_gds_path(): string {
@@ -151,11 +167,11 @@ function example_std_serialize($lib): void {
     $file = __DIR__ . '/../data.bin';
     echo "[$file]", GDS_EOL;
     $reply = \file_put_contents($file, $ser);
-    if (! $reply) {
+    if (!$reply) {
         echo "Write Fail: $file", GDS_EOL;
     }
     $lib2 = \unserialize(\file_get_contents($file));
-    print_r($lib2);    
+    print_r($lib2);
 }
 
 
@@ -167,8 +183,7 @@ if (php_sapi_name() == 'cli') {
     $inform = new Inform();
     $inform->gdspath = $stream_path;
     $inform->run();
-    $lib = $inform->library;    
-    example_std_serialize($lib);    
+    $lib = $inform->library;
+    example_std_serialize($lib);
 }
-
 ?>
