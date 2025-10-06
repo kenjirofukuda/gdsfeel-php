@@ -86,6 +86,8 @@ class Inform {
             case UNITS:
                 $this->library->units = $detail;
                 break;
+            case ENDLIB:
+                break;
             case BGNSTR:
                 $this->structure = new Structure();
                 break;
@@ -130,7 +132,7 @@ class Inform {
     }
 }
 
-$gdspath = join('/', [getenv('HOME'), 'Nextcloud', 'gds', 'GDSreader.0.3.2', 'test.gds']);
+$gdspath = join('/', [__DIR__, '..', 'test.gds']);
 if (!file_exists($gdspath)) {
     echo "Not found: $gdspath";
     exit(2);
@@ -142,6 +144,21 @@ function example_gds_path(): string {
     return $gdspath;
 }
 
+
+function example_std_serialize($lib): void {
+    $ser = \serialize($lib);
+    echo $ser, GDS_EOL;
+    $file = __DIR__ . '/../data.bin';
+    echo "[$file]", GDS_EOL;
+    $reply = \file_put_contents($file, $ser);
+    if (! $reply) {
+        echo "Write Fail: $file", GDS_EOL;
+    }
+    $lib2 = \unserialize(\file_get_contents($file));
+    print_r($lib2);    
+}
+
+
 $stream_path = $gdspath;
 if (php_sapi_name() == 'cli') {
     if ($argc >= 2) {
@@ -150,16 +167,8 @@ if (php_sapi_name() == 'cli') {
     $inform = new Inform();
     $inform->gdspath = $stream_path;
     $inform->run();
-    $lib = $inform->library;
-    $jsonString = json_encode($lib);
-    echo $jsonString, GDS_EOL;
-    $file = realpath(__DIR__ . '/../data.json');
-    echo $file, GDS_EOL;
-    $reply = \file_put_contents($file, $jsonString);
-    if (! $reply) {
-        echo "Write Fail: $file", GDS_EOL;
-    }
-    $lib2 = json_decode_class(\file_get_contents($file), '\gds\Library');
-    print_r($lib2);
+    $lib = $inform->library;    
+    example_std_serialize($lib);    
 }
+
 ?>
