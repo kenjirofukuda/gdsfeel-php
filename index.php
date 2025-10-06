@@ -32,6 +32,7 @@ if ($struc_name) {
     $structure = $lib->structureNamed($struc_name);
     $elkey = filter_input(INPUT_GET, 'e', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     if ($elkey) {
+        $elkey = intval($elkey);
         $element = $structure->elementAtElKey($elkey);
     }
 }
@@ -58,8 +59,15 @@ if ($struc_name) {
       <div id="struclist" class="scroll_lists" >
         <ul class="no-bullets nav-list-vivid">
           <?php foreach ($lib->structures() as $each) { ?>
-              <li><a href="./index.php?s=<?= $each->name ?>">
-                  <?= $each->name; ?>
+              <?php
+              $li_class = '';
+              if ($each->name == $struc_name) {
+                  $li_class = 'selected';
+              }
+              ?>
+              <li class="<?= $li_class ?>">
+                <a class="<?= $li_class ?>" href="./index.php?s=<?= $each->name ?>">
+                  <?= $each->name ?>
                 </a>
               </li>
           <?php } ?>
@@ -72,10 +80,14 @@ if ($struc_name) {
             echo '<ul class="no-bullets nav-list-vivid">', PHP_EOL;
             $struc = $lib->structureNamed($struc_name);
             foreach ($struc->elements() as $el) {
+                $li_class = '';
+                if ($element && $el->elkey == $elkey) {
+                    $li_class = 'selected';
+                }
                 $attr = [];
                 $attr['s'] = $struc_name;
                 $attr['e'] = $el->elkey;
-                echo '<li><a href="./index.php?' . http_build_query($attr) . '">' . $el . "</a></li>", PHP_EOL;
+                echo '<li class="'. $li_class .'">' . '<a class="' . $li_class . '" href="./index.php?' . http_build_query($attr) . '">' . $el . "</a></li>", PHP_EOL;
             }
             echo "</ul>", PHP_EOL;
         }

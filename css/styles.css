@@ -17,13 +17,25 @@
   padding-left: 0;
 }
 
-a {
+a, a:visited {
   text-decoration: none;
+  color: black;
 }
 
-listing {
-  font-family: monospace, serif;
+a.selected {
+  color: white;
 }
+
+li {
+  font-family: monospace, serif;
+  color: black;
+  background-color: #eee;
+}
+
+li.selected {
+  color: white;
+  background-color: darkblue;
+} 
 
 .customList1 .nav-list-vivid>li>a {
     border-bottom: 1px solid #dedede

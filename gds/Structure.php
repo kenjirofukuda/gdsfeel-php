@@ -13,7 +13,7 @@ class Structure {
 
     public string $name;
     public array $elements = [];
-    private int $elkey = 0;
+    private int $elkey = 1;
 
     function addElement(Element $element) {
         $element->elkey = $this->elkey;
@@ -28,7 +28,7 @@ class Structure {
 
 
     public function elementAtElKey(int $elkey): ?Element {
-        $result = array_find($this->elements, fn(Element $el) => $el->elkey == $elkey);
+        $result = array_find($this->elements, fn(Element $el) => intval($el->elkey) === intval($elkey));
         return $result;
     }
 }
