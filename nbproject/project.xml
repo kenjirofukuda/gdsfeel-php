@@ -6,8 +6,17 @@
             <name>gdsfeel-php</name>
         </data>
         <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1">
+            <library name="EaselJS" version="1.0.2">
+                <file localPath="js/libs/EaselJS/easeljs.js" path="easeljs.js"/>
+            </library>
             <library name="jquery" version="3.7.1">
                 <file localPath="js/libs/jquery/jquery.js" path="jquery.js"/>
+            </library>
+            <library name="snap.svg" version="0.5.1">
+                <file localPath="js/libs/snap.svg/snap.svg.js" path="snap.svg.js"/>
+            </library>
+            <library name="sprintf" version="1.1.3">
+                <file localPath="js/libs/sprintf/sprintf.js" path="sprintf.js"/>
             </library>
         </libraries>
     </configuration>

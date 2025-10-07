@@ -23,15 +23,26 @@ function loadIt() {
 
   adjustPortSize();
   gStructure = new GDS.Structure();
-  var sampleData = towerData();
-  sampleData.nodes.forEach(function (node) {
-    var p3 = node.position;
-    var hash = {
-      "vertices": [[p3[0], p3[2]]],
-      "type": "point"
-    };
-    gStructure.addElement(new GDS.Point(hash));
-  });
+  let obj = jsonData();
+  let strucName = $("#struc_name").html();
+  if (strucName) {
+    let struc = obj.structures[strucName];
+    struc.elements.forEach(function (el) {
+      let element = GDS.Element.fromObject2(el);
+      if (element) {
+       gStructure.addElement(element);
+      }
+    });
+  }
+  
+//  sampleData.nodes.forEach(function (node) {
+//    var p3 = node.position;
+//    var hash = {
+//      "vertices": [[p3[0], p3[2]]],
+//      "type": "point"
+//    };
+//    gStructure.addElement(new GDS.Point(hash));
+//  });
 
 
   gStructureView = new GDS.StructureView("canvas", gStructure);

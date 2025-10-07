@@ -23,13 +23,25 @@ else {
     file_put_contents($ser_file, $ser);
 }
 
-
 $struc_name = filter_input(INPUT_GET, 's', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($struc_name) {
     if (!$lib->hasStructureName($struc_name)) {
         $struc_name = null;
     }
 }
+
+$lib_json = json_encode($lib);
+$data_js = [];
+$data_js[] = 'function jsonData() {';
+$data_js[] = 'return ';
+$data_js[] = $lib_json;
+$data_js[] = '; }';
+
+$json_path = __DIR__ . '/lib_data.js';
+//if (file_exists($json_path)) {
+//    unlink($json_path);
+//}
+file_put_contents($json_path, join($data_js));
 
 $elkey = -1;
 $structure = null;
@@ -50,9 +62,12 @@ if ($struc_name) {
     <title>GdsFeel2</title>
     <link rel="stylesheet" href="./css/styles.css">
     <?php include_once './partial/header_scripts.php'; ?>
+    <script src="lib_data.js"></script>
     <script src="canvas.js"></script>
   </head>
-  <body>
+  <body onload="loadIt()">
+    <div id="struc_name" style="visibility: hidden;"><?= $struc_name ?></div>
+    
     <?php
     if ($struc_name) {
         $head = $lib->name . '/' . $struc_name;
@@ -123,18 +138,18 @@ if ($struc_name) {
           </div>
       <?php endif; ?>
 
-      <div id="canvas_container" class="fills-remaining-width">
+      <div id="canvas-wrapper" class="fills-remaining-width">
         <?php include_once './partial/command_buttons.php'; ?>
         <?php include_once './partial/coordinate_view.php'; ?>
-        <canvas></canvas>
+        <canvas id="canvas"></canvas>
       </div>
       
       <script>
-          const container = document.getElementById('canvas_container');
+          const container = document.getElementById('canvas-wrapper');
           const canvas = document.querySelector('canvas');
           const ctx = canvas.getContext('2d');
 
-          draw();
+          // draw();
           function draw() {
             canvas.width = container.clientWidth;
             canvas.height = container.clientHeight;
@@ -145,7 +160,7 @@ if ($struc_name) {
           }
           
           window.addEventListener('resize', () => {           
-            draw();
+            //draw();
           });
 
 

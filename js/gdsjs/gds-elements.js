@@ -15,7 +15,7 @@ GDS.Element.prototype.toString = function () {
 
 
 GDS.Element.prototype.dataExtent = function () {
-  for (var coord in this.hash.vertices) {
+  for (var coord of this.vertices()) {
     var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
     var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
     var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
@@ -24,6 +24,26 @@ GDS.Element.prototype.dataExtent = function () {
   return GEO.MakeRect(minX, minY,
           Math.abs(maxX - minX), Math.abs(maxY - minY));
 
+};
+
+
+GDS.Element.prototype._lookupVertices = function () {
+  let values = this.hash.map.XY;
+  let result = [];
+  for (let i = 0; i < values.length / 2; i++) {
+    let x = values[i * 2 + 0] * 0.001;
+    let y = values[i * 2 + 1] * 0.001;
+    result.push([x, y]);
+  }
+  return result;
+};
+
+
+GDS.Element.prototype.vertices = function () {
+  if (! this._vertices) {
+    this._vertices = this._lookupVertices();
+  }
+  return this._vertices;
 };
 
 
@@ -43,6 +63,18 @@ GDS.Element.fromObject = function (hash) {
   return null;
 };
 
+GDS.Element.fromObject2 = function (hash) {
+  if (hash.type === 9) { // PATH
+    return new GDS.Path(hash);
+  }
+  if (hash.type === 12) { // TEXT
+    return new GDS.Text(hash);
+  }
+  if (hash.type === 8) { // BOUNDARY
+    return new GDS.Boundary(hash);
+  }
+  return null;
+};
 
 
 GDS.Point = function (hash) {
@@ -55,32 +87,32 @@ GDS.Point.prototype.constructor = GDS.Segment;
 
 
 GDS.Point.prototype.toString = function () {
-  return "Point(" + this.hash.vertices[0] + ")";
+  return "Point(" + this.vertices()[0] + ")";
 };
 
 
 GDS.Point.prototype.dataExtent = function () {
-  return GEO.MakeRect(this.hash.vertices[0][0], this.hash.vertices[0][1]);
+  return GEO.MakeRect(this.vertices()[0][0], this.vertices()[0][1]);
 };
 
 
 
 
-GDS.Segment = function (hash) {
+GDS.Path = function (hash) {
   GDS.Element.call(this, hash);
 };
 
-GDS.Segment.prototype = Object.create(GDS.Element.prototype);
-GDS.Segment.prototype.constructor = GDS.Segment;
+GDS.Path.prototype = Object.create(GDS.Element.prototype);
+GDS.Path.prototype.constructor = GDS.Path;
 
 
-GDS.Segment.prototype.toString = function () {
-  return "Segment(" + this.start + " - " + this.end + ")";
+GDS.Path.prototype.toString = function () {
+  return "Path(" + this.start + " - " + this.end + ")";
 };
 
 
-GDS.Segment.prototype.dataExtent = function () {
-  for (var coord in this.hash.vertices) {
+GDS.Path.prototype.dataExtent = function () {
+  for (var coord of this.vertices()) {
     var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
     var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
     var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
@@ -102,7 +134,7 @@ GDS.Boundary.prototype.constructor = GDS.Boundary;
 
 
 GDS.Boundary.prototype.dataExtent = function () {
-  for (var coord in this.hash.vertices) {
+  for (var coord of this.vertices()) {
     var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
     var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
     var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
@@ -115,10 +147,11 @@ GDS.Boundary.prototype.dataExtent = function () {
 
 
 
-GDS.BoxText = function (hash) {
+GDS.Text = function (hash) {
   GDS.Element.call(this, hash); 
 };
 
 
-GDS.BoxText.prototype = Object.create(GDS.Element.prototype);
-GDS.BoxText.prototype.constructor = GDS.BoxText;
+GDS.Text.prototype = Object.create(GDS.Element.prototype);
+GDS.Text.prototype.constructor = GDS.BoxText;
+

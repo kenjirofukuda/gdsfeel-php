@@ -1,3 +1,7 @@
+#struc_name {
+  visibility: hidden;
+}
+
 #struclist {
 /*  background-color: cyan;*/
   float: left;

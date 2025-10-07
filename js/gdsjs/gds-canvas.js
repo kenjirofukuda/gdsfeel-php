@@ -8,16 +8,16 @@ GDS.Element.prototype.drawOn = function (ctx, port) {
 };
 
 
-GDS.BoxText.prototype.drawOn = function (ctx, port) {
+GDS.Text.prototype.drawOn = function (ctx, port) {
   ctx.font = "bold 16px Arial";
-  ctx.strokeText(this.hash.string, this.hash.vertices[0][0], this.hash.vertices[0][1]);
+  ctx.strokeText(this.hash.map['STRING'], this.vertices()[0][0], this.vertices()[0][1]);
 };
 
 
 GDS.Boundary.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
-  ctx.moveTo(this.hash.vertices[0][0], this.hash.vertices[0][1]);
-  for (var n in this.hash.vertiecs) {
+  ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
+  for (var n of this.vertices().slice(1)) {
     ctx.lineTo(n[0], n[1]);
   }
   ctx.closePath();
@@ -25,12 +25,12 @@ GDS.Boundary.prototype.drawOn = function (ctx, port) {
 };
 
 
-GDS.Segment.prototype.drawOn = function (ctx, port) {
-  ctx.beginPath();
-  ctx.moveTo(this.hash.vertices[0][0], this.hash.vertices[0][1]);
-  ctx.lineTo(this.hash.vertices[1][0], this.hash.vertices[1][1]);
-  ctx.closePath();
-  ctx.stroke();
+GDS.Path.prototype.drawOn = function (ctx, port) {
+  ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
+  for (var n of this.vertices().slice(1)) {
+    ctx.lineTo(n[0], n[1]);
+  }
+   ctx.stroke();
 };
 
 
@@ -39,7 +39,7 @@ GDS.Point.prototype.drawOn = function (ctx, port) {
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.lineWidth = 1;
-  var devicePoint = port.worldToDevice(this.hash.vertices[0][0], this.hash.vertices[0][1]);
+  var devicePoint = port.worldToDevice(this.vertices()[0][0], this.vertices()[0][1]);
   devicePoint.x = Math.round(devicePoint.x) + 0.5;
   devicePoint.y = Math.round(devicePoint.y) + 0.5;
   ctx.beginPath();
