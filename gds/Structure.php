@@ -13,7 +13,7 @@ class Structure {
 
     public string $name;
     public array $elements = [];
-    private int $elkey = 1;
+    private int $elkey = 0;
 
     function addElement(Element $element) {
         $element->elkey = $this->elkey;

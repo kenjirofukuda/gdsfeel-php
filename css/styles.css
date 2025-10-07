@@ -6,6 +6,11 @@
 /*  background-color: yellow;*/
   float: left;
 }
+#canvas_container {
+  float: left;
+  width: 100%;
+  background-color: aliceblue;
+}
 .scroll_lists {
   height: 600px;
   overflow: scroll;
@@ -24,6 +29,14 @@ a, a:visited {
 
 a.selected {
   color: white;
+}
+
+.container {
+  display: flex;
+}
+
+.fills-remaining-width {
+  flex-grow: 1;
 }
 
 li {
@@ -45,3 +58,4 @@ li.selected {
     background-color: #1abc9c;
     color: #fff
 }
+

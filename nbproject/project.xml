@@ -5,6 +5,10 @@
         <data xmlns="http://www.netbeans.org/ns/php-project/1">
             <name>gdsfeel-php</name>
         </data>
-        <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
+        <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1">
+            <library name="jquery" version="3.7.1">
+                <file localPath="js/libs/jquery/jquery.js" path="jquery.js"/>
+            </library>
+        </libraries>
     </configuration>
 </project>
