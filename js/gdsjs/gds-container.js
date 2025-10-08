@@ -19,7 +19,15 @@ GDS.Structure.prototype.elements = function () {
   return this._elements;
 };
 
+
 GDS.Structure.prototype.dataExtent = function () {
+  if (! this._dataExtent) {
+    this._dataExtent = this._lookupDataExtent();
+  }
+  return this._dataExtent;
+};
+  
+GDS.Structure.prototype._lookupDataExtent = function () {
   if (this.elements().length === 0) {
     return GEO.MakeRect(0, 0, 0, 0);
   }

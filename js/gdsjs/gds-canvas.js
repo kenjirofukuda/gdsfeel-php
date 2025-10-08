@@ -4,7 +4,7 @@
 
 
 GDS.Element.prototype.drawOn = function (ctx, port) {
-  
+
 };
 
 
@@ -17,8 +17,8 @@ GDS.Text.prototype.drawOn = function (ctx, port) {
 GDS.Boundary.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
   ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
-  for (var n of this.vertices().slice(1)) {
-    ctx.lineTo(n[0], n[1]);
+  for (var ce of this.vertices().slice(1)) {
+    ctx.lineTo(ce[0], ce[1]);
   }
   ctx.closePath();
   ctx.stroke();
@@ -26,11 +26,12 @@ GDS.Boundary.prototype.drawOn = function (ctx, port) {
 
 
 GDS.Path.prototype.drawOn = function (ctx, port) {
+  ctx.beginPath();
   ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
-  for (var n of this.vertices().slice(1)) {
-    ctx.lineTo(n[0], n[1]);
+  for (var ce of this.vertices().slice(1)) {
+    ctx.lineTo(ce[0], ce[1]);
   }
-   ctx.stroke();
+  ctx.stroke();
 };
 
 
@@ -154,10 +155,10 @@ GDS.StructureView.prototype.redraw = function (port) {
   if (this._structure === null) {
     return;
   }
+  ctx.setTransform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+  ctx.lineWidth = 1 / port.scale;
+  ctx.strokeStyle = "black";
   this._structure.elements().forEach(function (e) {
-    ctx.setTransform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-    ctx.lineWidth = 1 / port.scale;
-    ctx.strokeStyle = "black";
     e.drawOn(ctx, port);
   });
 };
