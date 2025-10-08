@@ -11,6 +11,11 @@ $prefs = [
         'caption' => 'dump selected element',
         'value' => false
     ],
+    'shows_element_list' => [
+        'key' => 'se',
+        'caption' => 'shows element list',
+        'value' => false
+    ],
 ];
 
 
@@ -22,10 +27,12 @@ if (file_exists($prefs_ser_path)) {
 
 $de_reply = filter_input(INPUT_POST, 'de', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $fi_reply = filter_input(INPUT_POST, 'fi', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$se_reply = filter_input(INPUT_POST, 'se', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-if ($de_reply || $fi_reply) {
+if ($de_reply || $fi_reply || $se_reply) {
     $prefs['dump_selected_element']['value'] = $de_reply == 'on';
     $prefs['force_inform']['value'] = $fi_reply == 'on';
+    $prefs['shows_element_list']['value'] = $se_reply == 'on';
     $ser_bin = serialize($prefs);
     file_put_contents($prefs_ser_path, $ser_bin);
 }

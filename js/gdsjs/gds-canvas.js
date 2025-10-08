@@ -2,6 +2,24 @@
 /* global GDS, GEO */
 
 
+GDS.strokeSlantCross = function (ctx, port, x, y) {
+  var unit = 3;
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.lineWidth = 1;
+  var devicePoint = port.worldToDevice(x, y);
+  devicePoint.x = Math.round(devicePoint.x) + 0.5;
+  devicePoint.y = Math.round(devicePoint.y) + 0.5;
+  ctx.beginPath();
+  ctx.strokeStyle = "blue";
+  ctx.moveTo(devicePoint.x - unit, devicePoint.y - unit);
+  ctx.lineTo(devicePoint.x + unit, devicePoint.y + unit);
+  ctx.moveTo(devicePoint.x - unit, devicePoint.y + unit);
+  ctx.lineTo(devicePoint.x + unit, devicePoint.y - unit);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+};
 
 GDS.Element.prototype.drawOn = function (ctx, port) {
 
@@ -32,6 +50,10 @@ GDS.Path.prototype.drawOn = function (ctx, port) {
     ctx.lineTo(ce[0], ce[1]);
   }
   ctx.stroke();
+};
+
+GDS.Sref.prototype.drawOn = function (ctx, port) {
+  GDS.strokeSlantCross(ctx, port, this.vertices()[0][0], this.vertices()[0][1]);
 };
 
 

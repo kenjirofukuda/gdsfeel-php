@@ -160,18 +160,37 @@ GEO.Viewport.prototype._damageTransform = function () {
 
 };
 
+
+GEO.point_x = function (obj){
+  if ('x' in obj) {
+    return obj['x'];
+  }
+  else {
+    return obj[0];
+  }
+};
+
+GEO.point_y = function (obj){
+  if ('y' in obj) {
+    return obj['y'];
+  }
+  else {
+    return obj[1];
+  }
+};
+
+
 GEO.calcExtentBounds = function (points) {
-  var BIG_VALUE = Math.pow(2, 32);
-  var minX = BIG_VALUE;
-  var maxX = -minX;
-  var minY = BIG_VALUE;
-  var maxY = -minY;
+  var minX = Number.MAX_VALUE;
+  var maxX = Number.MIN_VALUE;
+  var minY = Number.MAX_VALUE;
+  var maxY = Number.MIN_VALUE;
 
   points.forEach(function (p) {
-    minX = Math.min(p.x, minX);
-    maxX = Math.max(p.x, maxX);
-    minY = Math.min(p.y, minY);
-    maxY = Math.max(p.y, maxY);
+    minX = Math.min(GEO.point_x(p), minX);
+    maxX = Math.max(GEO.point_x(p), maxX);
+    minY = Math.min(GEO.point_y(p), minY);
+    maxY = Math.max(GEO.point_y(p), maxY);
   });
   return GEO.MakeRect(
           minX, minY, Math.abs(maxX - minX), Math.abs(maxY - minY));
@@ -188,7 +207,7 @@ GEO.MakePoint = function (x, y) {
 };
 
 createjs.Point.prototype.equals = function (other) {
-  return this.x == other.x && this.y == other.y;
+  return this.x === other.x && this.y === other.y;
 };
 
 

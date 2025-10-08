@@ -15,15 +15,15 @@ GDS.Element.prototype.toString = function () {
 
 
 GDS.Element.prototype.dataExtent = function () {
-  for (var coord of this.vertices()) {
-    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
-    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
-    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
-    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
-  }
-  return GEO.MakeRect(minX, minY,
-          Math.abs(maxX - minX), Math.abs(maxY - minY));
-
+//  for (var coord of this.vertices()) {
+//    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
+//    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
+//    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
+//    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
+//  }
+//  return GEO.MakeRect(minX, minY,
+//          Math.abs(maxX - minX), Math.abs(maxY - minY));
+  return GEO.calcExtentBounds(this.vertices());
 };
 
 
@@ -73,8 +73,21 @@ GDS.Element.fromObject2 = function (hash) {
   if (hash.type === 8) { // BOUNDARY
     return new GDS.Boundary(hash);
   }
+  if (hash.type === 10) { // BOUNDARY
+    return new GDS.Sref(hash);
+  }
   return null;
 };
+
+
+GDS.Sref = class extends GDS.Element {
+  
+  constructor(hash) {
+    super(hash);
+  }
+
+};
+
 
 
 GDS.Point = function (hash) {
@@ -112,15 +125,15 @@ GDS.Path.prototype.toString = function () {
 
 
 GDS.Path.prototype.dataExtent = function () {
-  for (var coord of this.vertices()) {
-    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
-    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
-    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
-    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
-  }
-  return GEO.MakeRect(minX, minY,
-          Math.abs(maxX - minX), Math.abs(maxY - minY));
-
+//  for (var coord of this.vertices()) {
+//    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
+//    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
+//    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
+//    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
+//  }
+//  return GEO.MakeRect(minX, minY,
+//          Math.abs(maxX - minX), Math.abs(maxY - minY));
+  return GEO.calcExtentBounds(this.vertices());
 };
 
 
@@ -134,15 +147,16 @@ GDS.Boundary.prototype.constructor = GDS.Boundary;
 
 
 GDS.Boundary.prototype.dataExtent = function () {
-  for (var coord of this.vertices()) {
-    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
-    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
-    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
-    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
-  }
-  return GEO.MakeRect(minX, minY,
-          Math.abs(maxX - minX), Math.abs(maxY - minY));
-
+//  for (var coord of this.vertices()) {
+//    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
+//    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
+//    var minY = Math.min(coord[1], minY || Number.MAX_VALUE);
+//    var maxY = Math.max(coord[1], maxY || Number.MIN_VALUE);
+//  }
+//  var result = GEO.MakeRect(minX, minY,
+//          Math.abs(maxX - minX), Math.abs(maxY - minY));
+//  var result = GEO.calcExtentBounds(this.vertices());
+  return GEO.calcExtentBounds(this.vertices());
 };
 
 

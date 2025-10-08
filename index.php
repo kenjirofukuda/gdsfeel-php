@@ -106,6 +106,7 @@ if ($struc_name) {
         </ul>
       </div>
 
+      <?php if ($prefs['shows_element_list']['value']) : ?>   
       <div id="elementlist"  class="scroll_lists">
         <?php
         if ($struc_name) {
@@ -129,6 +130,7 @@ if ($struc_name) {
         }
         ?>
       </div>
+      <?php endif; ?>
 
       <?php if (shows_element_inspector()) : ?>
           <div id="elementinspector">

@@ -7,10 +7,10 @@
 /* global GDS, GEO, createjs, Snap */
 "use strict";
 
-var gStructure = null;
-var gStructureView = null;
-var gQueue = null;
-var gWaitMSecs = 300;
+let gStructure = null;
+let gStructureView = null;
+let gQueue = null;
+let gWaitMSecs = 300;
 
 function loadIt() {
   $("#canvas-wrapper").css("display", "block");
@@ -36,8 +36,8 @@ function loadIt() {
   }
   
 //  sampleData.nodes.forEach(function (node) {
-//    var p3 = node.position;
-//    var hash = {
+//    let p3 = node.position;
+//    let hash = {
 //      "vertices": [[p3[0], p3[2]]],
 //      "type": "point"
 //    };
@@ -49,7 +49,7 @@ function loadIt() {
   gStructureView.addMouseMoveListener(function (e) {
     $("#deviceX").html(sprintf("%5d", e.offsetX));
     $("#deviceY").html(sprintf("%5d", e.offsetY));
-    var worldPoint = gStructureView.port.deviceToWorld(e.offsetX, e.offsetY);
+    let worldPoint = gStructureView.port.deviceToWorld(e.offsetX, e.offsetY);
     $("#worldX").html(sprintf("%+20.4f", worldPoint.x.roundDigits(4)));
     $("#worldY").html(sprintf("%+20.4f", worldPoint.y.roundDigits(4)));
   });
@@ -58,8 +58,8 @@ function loadIt() {
 }
 
 function adjustPortSize() {
-  var w = $("#canvas-wrapper").width();
-  var h = $("#canvas-wrapper").height();
+  let w = $("#canvas-wrapper").width();
+  let h = $("#canvas-wrapper").height();
   $("#canvas").attr("width", w);
   $("#canvas").attr("height", h);
   if (gStructureView) {
@@ -70,7 +70,7 @@ function adjustPortSize() {
 }
 
 function msg(s) {
-  var msgTag = $("#msg")[0];
+  let msgTag = $("#msg")[0];
   if (msgTag) {
     msgTag.innerHTML = s;
   }
