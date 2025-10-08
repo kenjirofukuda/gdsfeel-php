@@ -3,11 +3,11 @@
 
 
 GDS.strokeSlantCross = function (ctx, port, x, y) {
-  var unit = 3;
+  const unit = 3;
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.lineWidth = 1;
-  var devicePoint = port.worldToDevice(x, y);
+  const devicePoint = port.worldToDevice(x, y);
   devicePoint.x = Math.round(devicePoint.x) + 0.5;
   devicePoint.y = Math.round(devicePoint.y) + 0.5;
   ctx.beginPath();

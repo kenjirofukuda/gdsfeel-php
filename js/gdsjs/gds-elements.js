@@ -3,10 +3,22 @@
 /* global GEO, GDS */
 
 
-
-GDS.Element = function (jsonMap) {
-  this.hash = jsonMap;
+GDS.Element = class {
+  constructor(jsonMap) {
+    this.hash = jsonMap;
+  }
+  
+  dataExtent() {
+    if (! this._dataExtent) {
+      this._dataExtent = this._lookupDataExtent();
+    }
+    return this._dataExtent;
+  }
 };
+
+//GDS.Element = function (jsonMap) {
+//  this.hash = jsonMap;
+//};
 
 
 GDS.Element.prototype.toString = function () {
@@ -14,7 +26,7 @@ GDS.Element.prototype.toString = function () {
 };
 
 
-GDS.Element.prototype.dataExtent = function () {
+GDS.Element.prototype._lookupDataExtent   = function () {
 //  for (var coord of this.vertices()) {
 //    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
 //    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
@@ -73,14 +85,25 @@ GDS.Element.fromObject2 = function (hash) {
   if (hash.type === 8) { // BOUNDARY
     return new GDS.Boundary(hash);
   }
-  if (hash.type === 10) { // BOUNDARY
+  if (hash.type === 10) { // SREF
     return new GDS.Sref(hash);
+  }
+  if (hash.type === 11) { // AREF
+    return new GDS.Aref(hash);
   }
   return null;
 };
 
 
 GDS.Sref = class extends GDS.Element {
+  
+  constructor(hash) {
+    super(hash);
+  }
+
+};
+
+GDS.Aref = class extends GDS.Sref {
   
   constructor(hash) {
     super(hash);
@@ -104,27 +127,29 @@ GDS.Point.prototype.toString = function () {
 };
 
 
-GDS.Point.prototype.dataExtent = function () {
+GDS.Point.prototype._lookupDataExtent   = function () {
   return GEO.MakeRect(this.vertices()[0][0], this.vertices()[0][1]);
 };
 
 
-
-
-GDS.Path = function (hash) {
-  GDS.Element.call(this, hash);
+GDS.Path = class extends GDS.Element {
+   
 };
 
-GDS.Path.prototype = Object.create(GDS.Element.prototype);
-GDS.Path.prototype.constructor = GDS.Path;
+//GDS.Path = function (hash) {
+//  GDS.Element.call(this, hash);
+//};
+//
+//GDS.Path.prototype = Object.create(GDS.Element.prototype);
+//GDS.Path.prototype.constructor = GDS.Path;
+//
+//
+//GDS.Path.prototype.toString = function () {
+//  return "Path(" + this.start + " - " + this.end + ")";
+//};
 
 
-GDS.Path.prototype.toString = function () {
-  return "Path(" + this.start + " - " + this.end + ")";
-};
-
-
-GDS.Path.prototype.dataExtent = function () {
+GDS.Path.prototype._lookupDataExtent   = function () {
 //  for (var coord of this.vertices()) {
 //    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
 //    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
@@ -137,16 +162,20 @@ GDS.Path.prototype.dataExtent = function () {
 };
 
 
-GDS.Boundary = function (hash) {
-  GDS.Element.call(this, hash); 
+GDS.Boundary = class extends GDS.Element {
+   
 };
 
+//GDS.Boundary = function (hash) {
+//  GDS.Element.call(this, hash); 
+//};
+//
+//
+//GDS.Boundary.prototype = Object.create(GDS.Element.prototype);
+//GDS.Boundary.prototype.constructor = GDS.Boundary;
 
-GDS.Boundary.prototype = Object.create(GDS.Element.prototype);
-GDS.Boundary.prototype.constructor = GDS.Boundary;
 
-
-GDS.Boundary.prototype.dataExtent = function () {
+GDS.Boundary.prototype._lookupDataExtent   = function () {
 //  for (var coord of this.vertices()) {
 //    var minX = Math.min(coord[0], minX || Number.MAX_VALUE);
 //    var maxX = Math.max(coord[0], maxX || Number.MIN_VALUE);
@@ -161,11 +190,15 @@ GDS.Boundary.prototype.dataExtent = function () {
 
 
 
-GDS.Text = function (hash) {
-  GDS.Element.call(this, hash); 
+GDS.Text = class extends GDS.Element {
+   
 };
 
+//GDS.Text = function (hash) {
+//  GDS.Element.call(this, hash); 
+//};
 
-GDS.Text.prototype = Object.create(GDS.Element.prototype);
-GDS.Text.prototype.constructor = GDS.BoxText;
+
+//GDS.Text.prototype = Object.create(GDS.Element.prototype);
+//GDS.Text.prototype.constructor = GDS.BoxText;
 
