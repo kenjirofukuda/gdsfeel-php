@@ -8,6 +8,14 @@ GDS.Element = class {
     this.hash = jsonMap;
   }
 
+  get x() {
+    return this.vertices()[0][0];
+  }
+
+  get y() {
+    return this.vertices()[0][1];
+  }
+
   vertices() {
     if (!this._vertices) {
       this._vertices = this._lookupVertices();
@@ -116,7 +124,7 @@ GDS.Point = class extends GDS.Element {
   }
   
   _lookupDataExtent() {
-    return GEO.MakeRect(this.vertices()[0][0], this.vertices()[0][1]);
+    return GEO.MakeRect(this.x, this.y);
   }
 };
 

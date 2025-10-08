@@ -124,7 +124,7 @@ GEO.Viewport.prototype.basicTransform = function () {
 
 GEO.Viewport.prototype._lookupBasicTransform = function () {
   var tx = new createjs.Matrix2D();
-  tx.translate(this.portCenterX, this.height - this.portCenterY);
+  tx.translate(this.portCenterX + 0.5, this.height - this.portCenterY + 0.5);
   tx.scale(this.scale, -this.scale);
   tx.translate(-this.centerX, -this.centerY);
   return tx;

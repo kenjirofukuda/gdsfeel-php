@@ -11,7 +11,6 @@ GDS.strokeSlantCross = function (ctx, port, x, y) {
   devicePoint.x = Math.round(devicePoint.x) + 0.5;
   devicePoint.y = Math.round(devicePoint.y) + 0.5;
   ctx.beginPath();
-  ctx.strokeStyle = "blue";
   ctx.moveTo(devicePoint.x - unit, devicePoint.y - unit);
   ctx.lineTo(devicePoint.x + unit, devicePoint.y + unit);
   ctx.moveTo(devicePoint.x - unit, devicePoint.y + unit);
@@ -28,13 +27,13 @@ GDS.Element.prototype.drawOn = function (ctx, port) {
 
 GDS.Text.prototype.drawOn = function (ctx, port) {
   ctx.font = "bold 16px Arial";
-  ctx.strokeText(this.hash.map['STRING'], this.vertices()[0][0], this.vertices()[0][1]);
+  ctx.strokeText(this.hash.map['STRING'], this.x, this.y);
 };
 
 
 GDS.Boundary.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
-  ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
+  ctx.moveTo(this.x, this.y);
   for (var ce of this.vertices().slice(1)) {
     ctx.lineTo(ce[0], ce[1]);
   }
@@ -45,7 +44,7 @@ GDS.Boundary.prototype.drawOn = function (ctx, port) {
 
 GDS.Path.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
-  ctx.moveTo(this.vertices()[0][0], this.vertices()[0][1]);
+  ctx.moveTo(this.x, this.y);
   for (var ce of this.vertices().slice(1)) {
     ctx.lineTo(ce[0], ce[1]);
   }
@@ -53,9 +52,14 @@ GDS.Path.prototype.drawOn = function (ctx, port) {
 };
 
 GDS.Sref.prototype.drawOn = function (ctx, port) {
-  GDS.strokeSlantCross(ctx, port, this.vertices()[0][0], this.vertices()[0][1]);
+  ctx.strokeStyle = "blue";
+  GDS.strokeSlantCross(ctx, port, this.x, this.y);
 };
 
+GDS.Aref.prototype.drawOn = function (ctx, port) {
+  ctx.strokeStyle = "red";
+  GDS.strokeSlantCross(ctx, port, this.x, this.y);
+};
 
 GDS.Point.prototype.drawOn = function (ctx, port) {
   var unit = 3;
@@ -179,8 +183,8 @@ GDS.StructureView.prototype.redraw = function (port) {
   }
   ctx.setTransform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
   ctx.lineWidth = 1 / port.scale;
-  ctx.strokeStyle = "black";
   this._structure.elements().forEach(function (e) {
+    ctx.strokeStyle = "black";
     e.drawOn(ctx, port);
   });
 };
