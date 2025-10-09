@@ -3,41 +3,37 @@
 /* global GEO, GDS */
 
 
-GDS.Structure = function () {
-  this._elements = [];
-};
-
-GDS.Structure.prototype = {
-  constructor: GDS.Structure
-};
-
-GDS.Structure.prototype.addElement = function (e) {
-  this._elements.push(e);
-};
-
-GDS.Structure.prototype.elements = function () {
-  return this._elements;
-};
-
-
-GDS.Structure.prototype.dataExtent = function () {
-  if (! this._dataExtent) {
-    this._dataExtent = this._lookupDataExtent();
+GDS.Structure = class {
+  constructor() {
+    this._elements = [];
   }
-  return this._dataExtent;
-};
+
+  addElement(e) {
+    this._elements.push(e);
+  };
+
+  elements() {
+    return this._elements;
+  }
+
+  dataExtent () {
+    if (! this._dataExtent) {
+      this._dataExtent = this._lookupDataExtent();
+    }
+    return this._dataExtent;
+  }
   
-GDS.Structure.prototype._lookupDataExtent = function () {
-  if (this.elements().length === 0) {
-    return GEO.MakeRect(0, 0, 0, 0);
-  }
-  var points = [];
-  this.elements().forEach(function (e) {
-    var r = e.dataExtent();
-    r.pointArray().forEach(function (p) {
-      points.push(p);
+  _lookupDataExtent() {
+    if (this.elements().length === 0) {
+      return GEO.MakeRect(0, 0, 0, 0);
+    }
+    let points = [];
+    this.elements().forEach(function (e) {
+      var r = e.dataExtent();
+      r.pointArray().forEach(function (p) {
+        points.push(p);
+      });
     });
-  });
-  var ext = GEO.calcExtentBounds(points);
-  return ext;
+    return GEO.calcExtentBounds(points);
+  }
 };

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Porting of PHP 8.4 function
  *
@@ -11,13 +12,14 @@
  *
  * @see https://www.php.net/manual/en/function.array-find.php
  */
-function array_find(array $array, callable $callback): mixed {
-    foreach ($array as $key => $value) {
-        if ($callback($value, $key)) {
-            return $value;
-        }
+function array_find(array $array, callable $callback): mixed
+{
+  foreach ($array as $key => $value) {
+    if ($callback($value, $key)) {
+      return $value;
     }
-    return null;
+  }
+  return null;
 }
 
 
@@ -28,40 +30,39 @@ function array_find(array $array, callable $callback): mixed {
  * @param mixed $content
  * @return string
  */
-function html_tag($tag_name, $attrib = array(), $content = null): string {
-    if (!$attrib && !$content) {
-        return sprintf('<%s>', $tag_name);
+function html_tag($tag_name, $attrib = array(), $content = null): string
+{
+  if (!$attrib && !$content) {
+    return sprintf('<%s>', $tag_name);
+  }
+  if ($attrib) {
+    foreach ($attrib as $k => $v) {
+      if ($v === null) {
+        $attrib[$k] = sprintf('%s', $k);
+      } elseif (is_bool($v)) {
+        $attrib[$k] = sprintf('%s="%s"', $k, (int) $v);
+      } elseif ($v === '') {
+        unset($attrib[$k]);
+      } else {
+        $attrib[$k] = sprintf('%s="%s"', $k, $v);
+      }
     }
-    if ($attrib) {
-        foreach ($attrib as $k => $v) {
-            if ($v === null) {
-                $attrib[$k] = sprintf('%s', $k);
-            }
-            elseif (is_bool($v)) {
-                $attrib[$k] = sprintf('%s="%s"', $k, (int) $v);
-            }
-            elseif ($v === '') {
-                unset($attrib[$k]);
-            }
-            else {
-                $attrib[$k] = sprintf('%s="%s"', $k, $v);
-            }
-        }
-    }
-    if ($content === null) {
-        return sprintf('<%s %s>', $tag_name, implode(' ', $attrib));
-    }
-    return sprintf(
-            '<%s%s>%s</%s>'
-            , $tag_name
-            , $attrib ? ' ' . implode(' ', $attrib) : ''
-            , $content
-            , $tag_name
-    );
+  }
+  if ($content === null) {
+    return sprintf('<%s %s>', $tag_name, implode(' ', $attrib));
+  }
+  return sprintf(
+    '<%s%s>%s</%s>',
+    $tag_name,
+    $attrib ? ' ' . implode(' ', $attrib) : '',
+    $content,
+    $tag_name
+  );
 }
 
 
-function debug_out(mixed $value): string {
-    $result = html_tag('pre', null, html_tag('code', null, print_r($value, true)));
-    return $result;
+function debug_out(mixed $value): string
+{
+  $result = html_tag('pre', null, html_tag('code', null, print_r($value, true)));
+  return $result;
 }

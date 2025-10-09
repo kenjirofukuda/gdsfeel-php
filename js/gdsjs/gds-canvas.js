@@ -1,6 +1,8 @@
 "use strict";
+/**
+ * Browser only
+ */
 /* global GDS, GEO */
-
 
 GDS.strokeSlantCross = function (ctx, port, x, y) {
   const unit = 3;
@@ -20,8 +22,9 @@ GDS.strokeSlantCross = function (ctx, port, x, y) {
   ctx.restore();
 };
 
-GDS.Element.prototype.drawOn = function (ctx, port) {
 
+GDS.Element.prototype.drawOn = function (ctx, port) {
+  // subclass must be override
 };
 
 
@@ -34,7 +37,7 @@ GDS.Text.prototype.drawOn = function (ctx, port) {
 GDS.Boundary.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
   ctx.moveTo(this.x, this.y);
-  for (var ce of this.vertices().slice(1)) {
+  for (let ce of this.vertices().slice(1)) {
     ctx.lineTo(ce[0], ce[1]);
   }
   ctx.closePath();
@@ -45,7 +48,7 @@ GDS.Boundary.prototype.drawOn = function (ctx, port) {
 GDS.Path.prototype.drawOn = function (ctx, port) {
   ctx.beginPath();
   ctx.moveTo(this.x, this.y);
-  for (var ce of this.vertices().slice(1)) {
+  for (let ce of this.vertices().slice(1)) {
     ctx.lineTo(ce[0], ce[1]);
   }
   ctx.stroke();
@@ -62,11 +65,11 @@ GDS.Aref.prototype.drawOn = function (ctx, port) {
 };
 
 GDS.Point.prototype.drawOn = function (ctx, port) {
-  var unit = 3;
+  const unit = 3;
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.lineWidth = 1;
-  var devicePoint = port.worldToDevice(this.vertices()[0][0], this.vertices()[0][1]);
+  const devicePoint = port.worldToDevice(this.vertices()[0][0], this.vertices()[0][1]);
   devicePoint.x = Math.round(devicePoint.x) + 0.5;
   devicePoint.y = Math.round(devicePoint.y) + 0.5;
   ctx.beginPath();
@@ -91,22 +94,22 @@ GDS.Tracking = function (view) {
 
 
 GDS.Tracking.prototype.registerWheel = function () {
-  var self = this;
-  var mousewheelevent = "onwheel" in document ? "wheel" : "onmousewheel" in document ? "mousewheel" : "DOMMouseScroll";
+  const self = this;
+  const mousewheelevent = "onwheel" in document ? "wheel" : "onmousewheel" in document ? "mousewheel" : "DOMMouseScroll";
   $(this.view.portId).on(mousewheelevent, function (e) {
     e.preventDefault();
-    var delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
+    const delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
     console.log(e);
-    var p = GEO.MakePoint(e.originalEvent.offsetX, e.originalEvent.offsetY);
-    var dir = delta < 0 ? -1.0 : 1.0;
-    var center = self.view.port.deviceToWorld(p.x, p.y);
+    const p = GEO.MakePoint(e.originalEvent.offsetX, e.originalEvent.offsetY);
+    const dir = delta < 0 ? -1.0 : 1.0;
+    const center = self.view.port.deviceToWorld(p.x, p.y);
     self.view.port.wheelZoom(p.x, p.y, center.x, center.y, dir);
   });
 };
 
 
 GDS.Tracking.prototype.registerHandler = function () {
-  var self = this;
+  const self = this;
   this.element.addEventListener("mousedown", function (evt) {
     self.down = true;
     self.points = [];
@@ -117,7 +120,7 @@ GDS.Tracking.prototype.registerHandler = function () {
     if (!self.down) {
       return;
     }
-    var p = GEO.MakePoint(evt.offsetX, evt.offsetY);
+    const p = GEO.MakePoint(evt.offsetX, evt.offsetY);
     if (self.downPoint.equals(p)) {
       return;
     }
@@ -128,11 +131,11 @@ GDS.Tracking.prototype.registerHandler = function () {
       $(self.view.portId).css("cursor", "all-scroll");
     }
     if (self.points.length > 2) {
-      var p1 = self.points[self.points.length - 2];
-      var p2 = self.points[self.points.length - 1];
-      var wp1 = self.view.port.deviceToWorld(p1.x, p1.y);
-      var wp2 = self.view.port.deviceToWorld(p2.x, p2.y);
-      var moved = wp2.minus(wp1);
+      const p1 = self.points[self.points.length - 2];
+      const p2 = self.points[self.points.length - 1];
+      const wp1 = self.view.port.deviceToWorld(p1.x, p1.y);
+      const wp2 = self.view.port.deviceToWorld(p2.x, p2.y);
+      const moved = wp2.minus(wp1);
       self.view.port.setCenter(self.view.port.centerX - moved.x, self.view.port.centerY - moved.y);
     }
     console.log(["m", self.currPoint + ""]);
@@ -147,13 +150,12 @@ GDS.Tracking.prototype.registerHandler = function () {
 
 
 GDS.StructureView = function (portId, structure) {
-  var self = this;
+  const self = this;
   this.portId = portId;
   this._structure = structure;
   this.ctx = this.context();
   this.port = new GEO.Viewport(this.ctx.canvas.width, this.ctx.canvas.height);
   this.tack = new GDS.Tracking(self);
-  var self = this;
   this.port.portDamageFunction = function (port) {
     self.redraw(port);
   };
@@ -161,8 +163,8 @@ GDS.StructureView = function (portId, structure) {
 
 
 GDS.StructureView.prototype.context = function () {
-  var canvas = document.getElementById(this.portId);
-  var ctx = canvas.getContext("2d");
+  const canvas = document.getElementById(this.portId);
+  const ctx = canvas.getContext("2d");
   return ctx;
 };
 
@@ -173,11 +175,11 @@ GDS.StructureView.prototype.addMouseMoveListener = function (proc) {
 
 
 GDS.StructureView.prototype.redraw = function (port) {
-  var ctx = this.context();
+  const ctx = this.context();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.fillStyle = "lightGray";
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  var mat = port.transform();
+  const mat = port.transform();
   if (this._structure === null) {
     return;
   }
