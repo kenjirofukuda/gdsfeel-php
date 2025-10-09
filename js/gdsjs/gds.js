@@ -6,5 +6,26 @@
 
 /* global GEO */
 
-var GDS = {};
+const GDS = {};
+
+
+GDS.Object = class {
+  constructor() {
+    this.parent = null;
+  }
+
+  root() {
+    let obj = this;
+    while (true) {
+      if (obj.parent === null) {
+        break;
+      }
+      else {
+        obj = obj.parent;
+      }
+    }
+    return obj;
+  }
+  
+};
 

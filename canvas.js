@@ -7,6 +7,7 @@
 /* global GDS, GEO, createjs, Snap */
 "use strict";
 
+let gLibrary = null;
 let gStructure = null;
 let gStructureView = null;
 let gQueue = null;
@@ -22,17 +23,13 @@ function loadIt() {
   }, false);
 
   adjustPortSize();
-  gStructure = new GDS.Structure();
   let obj = jsonData();
+  gLibrary = new GDS.Library();
+  gLibrary.loadFromJson(obj);
+  gStructure = new GDS.Structure();
   let strucName = $("#struc_name").html();
   if (strucName) {
-    let struc = obj.structures[strucName];
-    struc.elements.forEach(function (el) {
-      let element = GDS.Element.fromObject2(el);
-      if (element) {
-       gStructure.addElement(element);
-      }
-    });
+    gStructure = gLibrary.structureNamed(strucName);
   }
   
 //  sampleData.nodes.forEach(function (node) {

@@ -3,8 +3,9 @@
 /* global GEO, GDS */
 
 
-GDS.Element = class {
+GDS.Element = class extends GDS.Object {
   constructor(jsonMap) {
+    super();
     this.hash = jsonMap;
   }
 
@@ -91,13 +92,65 @@ GDS.Element.fromObject2 = function (hash) {
 GDS.Sref = class extends GDS.Element {
   constructor(hash) {
     super(hash);
+    this._refStructure = null;
   }
+
+  get refName() {
+    return this.hash.map['SNAME'];
+  }
+  
+  get refrected() {
+    return this.hash.map['STRANS'] & 0x8000 != 0;
+  }
+
+  get angleAbsolute() {
+    return this.hash.map['STRANS'] & 0x8001 != 0;
+  }
+
+  get magAbsolute() {
+    return this.hash.map['STRANS'] & 0x8002 != 0;
+  }
+
+  get angleDegress() {
+    return this.hash.map['ANGLE'] || 0.0;
+  }
+  
+  get magnify() {
+    return this.hash.map['MAG'] || 1.0;
+  }
+  
+  get refStructure() {
+    if (this._refStructure === null) {
+      this._refStructure = this.root().structureNamed(this.refName);
+    }
+    return this._refStructure;
+  }
+
+  transform() {
+    if (! this._transform) {
+      this._transform = this._lookupTransform();
+    }
+    return this._transform;
+  }
+  
+  _lookupTransform() {
+    const tx = new createjs.Matrix2D();
+    tx.translate(this.x, this.y);
+    tx.scale(this.magnify, this.magnify);
+    tx.rotate(this.angleDegress);
+    if (this.reflected) {
+      tx.scale(1, -1);
+    }
+    return tx;
+  }
+  
 };
 
 GDS.Aref = class extends GDS.Sref {
   constructor(hash) {
     super(hash);
   }
+
 };
 
 

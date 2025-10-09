@@ -57,6 +57,12 @@ GDS.Path.prototype.drawOn = function (ctx, port) {
 GDS.Sref.prototype.drawOn = function (ctx, port) {
   ctx.strokeStyle = "blue";
   GDS.strokeSlantCross(ctx, port, this.x, this.y);
+  ctx.save();
+  ctx.strokeStyle = "brown";
+  const mat = this.transform();
+  ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+  ctx._structureView.drawStructure(ctx, port, this.refStructure);
+  ctx.restore();
 };
 
 GDS.Aref.prototype.drawOn = function (ctx, port) {
@@ -165,6 +171,7 @@ GDS.StructureView = function (portId, structure) {
 GDS.StructureView.prototype.context = function () {
   const canvas = document.getElementById(this.portId);
   const ctx = canvas.getContext("2d");
+  ctx._structureView = this;
   return ctx;
 };
 
@@ -185,11 +192,24 @@ GDS.StructureView.prototype.redraw = function (port) {
   }
   ctx.setTransform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
   ctx.lineWidth = 1 / port.scale;
-  this._structure.elements().forEach(function (e) {
+  this.drawStructure(ctx, port, this._structure);
+  // this._structure.elements().forEach(function (e) {
+  //   ctx.strokeStyle = "black";
+  //   e.drawOn(ctx, port);
+  // });
+};
+
+GDS.StructureView.prototype.drawStructure = function (ctx, port, structure) {
+  this.drawElements(ctx, port, structure.elements());
+}
+
+GDS.StructureView.prototype.drawElements = function (ctx, port, elements) {
+  elements.forEach(function (e) {
     ctx.strokeStyle = "black";
     e.drawOn(ctx, port);
   });
 };
+
 
 
 GDS.StructureView.prototype.fit = function () {
