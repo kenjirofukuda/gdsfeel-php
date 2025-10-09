@@ -133,16 +133,16 @@ function one_element_as_atomic(mixed $value): mixed {
 
 function check_gds_path(string $gdspath): void {
     if (!file_exists($gdspath)) {
-        throw new Exception("File not found: $gdspath");
+        throw new \Exception("File not found: $gdspath");
     }
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $reply = finfo_file($finfo, $gdspath);
     if (str_ends_with($reply, 'x-empty')) {
-        throw new Exception("Empty File: $gdspath");
+        throw new \Exception("Empty File: $gdspath");
     }
     if (!str_ends_with($reply, 'octet-stream')) {
         // TODO: adhook not strict
-        throw new Exception("Not a GDSII file: $gdspath");
+        throw new \Exception("Not a GDSII file: $gdspath");
     }
 }
 

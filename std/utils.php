@@ -1,13 +1,34 @@
 <?php
+/**
+ * Porting of PHP 8.4 function
+ *
+ * @template TValue of mixed
+ * @template TKey of array-key
+ *
+ * @param array<TKey, TValue> $array
+ * @param callable(TValue $value, TKey $key): bool $callback
+ * @return ?TValue
+ *
+ * @see https://www.php.net/manual/en/function.array-find.php
+ */
+function array_find(array $array, callable $callback): mixed {
+    foreach ($array as $key => $value) {
+        if ($callback($value, $key)) {
+            return $value;
+        }
+    }
+    return null;
+}
+
 
 /**
  * @see https://qiita.com/yama-github/items/ee8c44571b3e6ec4916f
- * @param type $tag_name
- * @param type $attrib
- * @param type $content
- * @return type
+ * @param string $tag_name
+ * @param array $attrib
+ * @param mixed $content
+ * @return string
  */
-function html_tag($tag_name, $attrib = array(), $content = null) {
+function html_tag($tag_name, $attrib = array(), $content = null): string {
     if (!$attrib && !$content) {
         return sprintf('<%s>', $tag_name);
     }
@@ -39,3 +60,8 @@ function html_tag($tag_name, $attrib = array(), $content = null) {
     );
 }
 
+
+function debug_out(mixed $value): string {
+    $result = html_tag('pre', null, html_tag('code', null, print_r($value, true)));
+    return $result;
+}

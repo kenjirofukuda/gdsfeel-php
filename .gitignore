@@ -1,3 +1,5 @@
 /nbproject/private/
 /vendor/*
 /*.bin
+/lib_data.js
+/README.html

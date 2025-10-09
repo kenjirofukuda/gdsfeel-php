@@ -1,0 +1,5 @@
+#+TITLE: crash コース
+#+AUTHOR: kenjirofukuda@gmail.com
+
+ここはPHPの基礎的な練習場
+
