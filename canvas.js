@@ -30,6 +30,14 @@ function loadIt() {
   let strucName = $("#struc_name").html();
   if (strucName) {
     gStructure = gLibrary.structureNamed(strucName);
+    let domElements = $('#elementlist').find('.gelement .selected');
+    console.log(domElements);
+    let elKey = $(domElements[0]).data('elKey');
+    let element = gStructure.elements().find((el) => el.hash.elkey == elKey);
+    console.log(element);
+    let stream = {};
+    element.attrOn(stream);
+    console.log(JSON.stringify(stream, null, 2));
   }
   
 //  sampleData.nodes.forEach(function (node) {

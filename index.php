@@ -120,9 +120,9 @@ if ($struc_name) {
           echo '<ul class="no-bullets nav-list-vivid">', PHP_EOL;
           $struc = $lib->structureNamed($struc_name);
           foreach ($struc->elements() as $el) {
-            $li_class = '';
+            $li_class = 'gelement';
             if ($element && $el->elkey == $elkey) {
-              $li_class = 'selected';
+              $li_class .= ' selected';
             }
             $attr = [];
             $attr['s'] = $struc_name;
@@ -134,7 +134,8 @@ if ($struc_name) {
                 'a',
                 [
                   'class' => $li_class,
-                  'href' => './index.php?' . http_build_query($attr)
+                  'href' => './index.php?' . http_build_query($attr),
+                  'data-el-key' =>  $el->elkey 
                 ],
                 $el
               )
@@ -148,7 +149,10 @@ if ($struc_name) {
 
     <?php if (shows_element_inspector()) : ?>
       <div id="elementinspector">
-        <?= debug_out($element) ?>
+        <div id="php_inspector">
+              <?= debug_out($element) ?>
+        </div>
+        <div id="js_inspector"></div>
       </div>
     <?php endif; ?>
 

@@ -50,6 +50,21 @@ GDS.Element = class extends GDS.Object {
     return result;
   }
 
+  get datatype () {
+    return this.hash.map['DATATYPE'] || 0;
+  }
+
+  get layer () {
+    return this.hash.map['LAYER'] || 0;
+  }
+
+  attrOn(stream) {
+    stream['vertices'] = this.vertices();
+    stream['elkey'] = this.hash.elkey;
+    stream['datatype'] = this.datatype;
+    stream['layer'] = this.layer;
+    stream['dataExtent'] = this.dataExtent();
+  }
 };
 
 
@@ -126,6 +141,17 @@ GDS.Sref = class extends GDS.Element {
     return this._refStructure;
   }
 
+  attrOn(stream) {
+    super.attrOn(stream);
+    stream['refName'] = this.refName;
+    stream['reflected'] = this.reflected;
+    stream['angleAbsolute'] = this.angleAbsolute;
+    stream['magAbsolute'] = this.magAbsolute;
+    stream['angleDegress'] = this.angleDegress;
+    stream['magnify'] = this.magnify;
+    stream['transform'] = this.transform();
+  }
+  
   transform() {
     if (! this._transform) {
       this._transform = this._lookupTransform2();
@@ -143,22 +169,6 @@ GDS.Sref = class extends GDS.Element {
     }
     return tx;
   }
-// lookupMatrix2x3
-// 	| t rad radCos radSin |
-// 	t := GeometryUtils transformClass identity.
-// 	rad := angle degreesToRadians.
-// 	radCos := rad cos.
-// 	radSin := rad sin.
-// 	t a11: mag * radCos.
-// 	t a12: mag negated * radSin.
-// 	t a13: self offset x.
-// 	t a21: mag * radSin.
-// 	t a22: mag * radCos.
-// 	t a23: self offset y.
-// 	reflected
-// 		ifTrue: [ t a12: t a12 negated.
-// 			t a22: t a22 negated ].
-// 	  ^ t
   
   _lookupTransform2() {
     const rtx = new createjs.Matrix2D();
@@ -188,6 +198,15 @@ GDS.Aref = class extends GDS.Sref {
     this._repeatedTransforms = null;
   }
 
+  attrOn(stream) {
+    super.attrOn(stream);
+    stream['cols'] = this.cols;
+    stream['rows'] = this.rows;
+    stream['colStep'] = this.colStep;
+    stream['rowStep'] = this.rowStep;
+    stream['repeatedTransforms'] = this.repeatedTransforms();
+  }
+  
   get cols() {
     return (this.hash.map['COLROW'])[0];
   }
@@ -259,6 +278,13 @@ GDS.Path = class extends GDS.Element {
     return this.hash.map['WIDTH'] * 0.001;
   }
 
+  attrOn(stream) {
+    super.attrOn(stream);
+    stream['pathtype'] = this.pathtype;
+    stream['width'] = this.width;
+    stream['outloineCoords'] = this.outlineCoords();
+  }
+  
   outlineCoords() {
     if (! this._outlineCoords) {
       this._outlineCoords =
@@ -275,6 +301,29 @@ GDS.Boundary = class extends GDS.Element {
 
 
 GDS.Text = class extends GDS.Element {
+  get string () {
+    return this.hash.map['STRING'];
+  }
+
+  get texttype () {
+    return this.hash.map['TEXTTYPE'] || 0;
+  }
+
+  get presentation () {
+    return this.hash.map['PRESENTATION'] || 0;
+  }
+
+  get magnify () {
+    return this.hash.map['MAG'] || 0;
+  }
+
+  attrOn(stream) {
+    super.attrOn(stream);
+    stream['string'] = this.string;
+    stream['texttype'] = this.texttype;
+    stream['presentation'] = this.presentation;
+    stream['magnify'] = this.magnify;
+  }
 };
 
 
