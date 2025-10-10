@@ -4,6 +4,13 @@
 
 const GEO = {};
 
+GEO.EPS = 1e-8;
+
+GEO.sameValue = function(v1, v2, eps = GEO.EPS) {
+  return Math.abs(v1 - v2) < eps;
+}
+
+
 GEO.Viewport = class {
   constructor(width, height) {
     this.width = width;
@@ -18,6 +25,7 @@ GEO.Viewport = class {
     this._basicTransform = null;
     this.transformStack = new Array();
     this.portDamageFunction = null;
+    this.transformFunction = null;
   }
 
   wheelZoom(h, v, x, y, direction) {
@@ -62,6 +70,9 @@ GEO.Viewport = class {
   }
 
   transform() {
+    if (typeof(this.transformFunction) === 'function') {
+      return this.transformFunction();
+    }
     if (this._transform === null) {
       this._transform = this._lookupTransform();
     }
@@ -117,7 +128,7 @@ GEO.Viewport = class {
 
   _lookupBasicTransform() {
     const tx = new createjs.Matrix2D();
-    tx.translate(this.portCenterX + 0.5, this.height - this.portCenterY + 0.5);
+    tx.translate(this.portCenterX, this.height - this.portCenterY);
     tx.scale(this.scale, -this.scale);
     tx.translate(-this.centerX, -this.centerY);
     return tx;

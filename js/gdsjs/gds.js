@@ -8,6 +8,14 @@
 
 const GDS = {};
 
+GDS.EPS = 1e-8;
+GDS.BUT_END = 
+GDS.BUTT_END = 0;
+GDS.ROUND_END = 1;
+GDS.EXTENDED_END = 2;
+GDS.CUSTOMPLUS_END = 4;
+GDS.PI_HALF = 0.5 * Math.PI;
+GDS.PI_DOUBLE = 2.0 * Math.PI;
 
 GDS.Object = class {
   constructor() {

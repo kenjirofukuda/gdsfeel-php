@@ -123,6 +123,7 @@ class Inform {
     case TEXTTYPE:
     case NODETYPE:
     case BOXTYPE:
+    case WIDTH:
     case STRING:
     case COLROW:
     case STRANS:
