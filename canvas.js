@@ -23,38 +23,31 @@ function loadIt() {
   }, false);
 
   adjustPortSize();
-  let obj = jsonData();
+  const obj = jsonData();
   gLibrary = new GDS.Library();
   gLibrary.loadFromJson(obj);
   gStructure = new GDS.Structure();
-  let strucName = $("#struc_name").html();
+  const strucName = $("#struc_name").html();
   if (strucName) {
     gStructure = gLibrary.structureNamed(strucName);
-    let domElements = $('#elementlist').find('.gelement .selected');
+    const domElements = $('#elementlist').find('.gelement .selected');
     console.log(domElements);
-    let elKey = $(domElements[0]).data('elKey');
-    let element = gStructure.elements().find((el) => el.hash.elkey == elKey);
-    console.log(element);
-    let stream = {};
-    element.attrOn(stream);
-    console.log(JSON.stringify(stream, null, 2));
+    const elKey = $(domElements[0]).data('elKey');
+    const element = gStructure.elements().find((el) => el.hash.elkey == elKey);
+    if (element) {
+      console.log(element);
+      let stream = {};
+      element.attrOn(stream);
+      console.log(stream);
+      // console.log(JSON.stringify(stream, null, 2));
+    }
   }
   
-//  sampleData.nodes.forEach(function (node) {
-//    let p3 = node.position;
-//    let hash = {
-//      "vertices": [[p3[0], p3[2]]],
-//      "type": "point"
-//    };
-//    gStructure.addElement(new GDS.Point(hash));
-//  });
-
-
   gStructureView = new GDS.StructureView("canvas", gStructure);
   gStructureView.addMouseMoveListener(function (e) {
     $("#deviceX").html(sprintf("%5d", e.offsetX));
     $("#deviceY").html(sprintf("%5d", e.offsetY));
-    let worldPoint = gStructureView.port.deviceToWorld(e.offsetX, e.offsetY);
+    const worldPoint = gStructureView.port.deviceToWorld(e.offsetX, e.offsetY);
     $("#worldX").html(sprintf("%+20.4f", worldPoint.x.roundDigits(4)));
     $("#worldY").html(sprintf("%+20.4f", worldPoint.y.roundDigits(4)));
   });

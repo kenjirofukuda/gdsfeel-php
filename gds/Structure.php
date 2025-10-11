@@ -13,12 +13,12 @@ class Structure {
 
   public string $name;
   public array $elements = [];
-  private int $elkey = 0;
+  private int $el_seed = 0;
 
   function addElement(Element $element) {
-    $element->elkey = $this->elkey;
+    $element->elkey = $this->el_seed;
     $this->elements[] = $element;
-    $this->elkey++;
+    $this->el_seed++;
   }
 
 

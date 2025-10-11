@@ -122,7 +122,7 @@ GDS.Tracking = class {
     $(this.view.portId).on(mousewheelevent, function (e) {
       e.preventDefault();
       const delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
-      console.log(e);
+      // console.log(e);
       const p = GEO.MakePoint(e.originalEvent.offsetX, e.originalEvent.offsetY);
       const dir = delta < 0 ? -1.0 : 1.0;
       const center = self.view.port.deviceToWorld(p.x, p.y);
@@ -136,7 +136,7 @@ GDS.Tracking = class {
       self.down = true;
       self.points = [];
       self.downPoint = GEO.MakePoint(evt.offsetX, evt.offsetY);
-      console.log(["d", self.downPoint + ""]);
+      // console.log(["d", self.downPoint + ""]);
     });
     this.element.addEventListener("mousemove", function (evt) {
       if (!self.down) {
@@ -148,7 +148,7 @@ GDS.Tracking = class {
       }
       self.currPoint = p;
       self.points.push(p);
-      console.log(self);
+      // console.log(self);
       if (self.points.length === 1) {
         $(self.view.portId).css("cursor", "all-scroll");
       }
@@ -160,13 +160,13 @@ GDS.Tracking = class {
         const moved = wp2.minus(wp1);
         self.view.port.setCenter(self.view.port.centerX - moved.x, self.view.port.centerY - moved.y);
       }
-      console.log(["m", self.currPoint + ""]);
+      // console.log(["m", self.currPoint + ""]);
     });
     this.element.addEventListener("mouseup", function (evt) {
       self.down = false;
       self.upPoint = GEO.MakePoint(evt.offsetX, evt.offsetY);
       $(self.view.portId).css("cursor", "default");
-      console.log(["u", self.upPoint + ""]);
+      // console.log(["u", self.upPoint + ""]);
     });
   }
 };
