@@ -253,9 +253,8 @@ GDS.Aref = class extends GDS.Sref {
       for (let iy = 0; iy < this.rows; iy++) {
         const otx = new createjs.Matrix2D();
         otx.translate(ix * this.colStep, iy * this.rowStep);
-        const tx = this.transform().clone();
-        tx.prependMatrix(otx);
-        result.push(tx);
+        otx.prependMatrix(this.transform());
+        result.push(otx);
       }
     }
     return result;

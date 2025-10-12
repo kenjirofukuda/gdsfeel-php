@@ -23,11 +23,15 @@ GEO.Viewport = class {
     this._transform = null;
     this._invertTransform = null;
     this._basicTransform = null;
-    this.transformStack = new Array();
+    this.transformStack = [];
     this.portDamageFunction = null;
     this.transformFunction = null;
   }
 
+  get transformDepth() {
+    return this.transformStack.length;
+  }
+  
   wheelZoom(h, v, x, y, direction) {
     this.portCenterX = h;
     this.portCenterY = this.height - v;

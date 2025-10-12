@@ -2,9 +2,9 @@
 /**
  * Browser only
  */
-/* global GDS, GEO */
+/* global GDS, GEO createjs */
 
-GDS.strokeSlantCross = function (ctx, port, x, y) {
+function strokeSlantCrossV1(ctx, port, x, y) {
   const unit = 3;
   const devicePoint = port.worldToDevice(x, y);
   ctx.save();
@@ -17,10 +17,24 @@ GDS.strokeSlantCross = function (ctx, port, x, y) {
   ctx.lineTo(devicePoint.x + unit, devicePoint.y + unit);
   ctx.moveTo(devicePoint.x - unit, devicePoint.y + unit);
   ctx.lineTo(devicePoint.x + unit, devicePoint.y - unit);
-  ctx.closePath();
   ctx.stroke();
   ctx.restore();
 };
+
+function strokeSlantCrossV2(ctx, port, x, y) {
+  const unit = 3 / port.scale;
+  const devicePoint = GEO.MakePoint(x, y);
+
+  ctx.beginPath();
+  ctx.moveTo(devicePoint.x - unit, devicePoint.y - unit);
+  ctx.lineTo(devicePoint.x + unit, devicePoint.y + unit);
+  ctx.moveTo(devicePoint.x - unit, devicePoint.y + unit);
+  ctx.lineTo(devicePoint.x + unit, devicePoint.y - unit);
+  ctx.stroke();
+};
+
+
+GDS.strokeSlantCross = strokeSlantCrossV2;
 
 GDS.strokePoints = function (ctx, port, points, closing = false) {
   ctx.beginPath();
@@ -40,6 +54,7 @@ GDS.Element.prototype.drawOn = function (ctx, port) {
 
 GDS.Text.prototype.drawOn = function (ctx, port) {
   ctx.font = "bold 16px Arial";
+  ctx.strokeStyle = "purple";
   ctx.strokeText(this.hash.map['STRING'], this.x, this.y);
 };
 
@@ -56,54 +71,49 @@ GDS.Path.prototype.strokeOutline = function (ctx, port) {
 };
 
 GDS.Path.prototype.drawOn = function (ctx, port) {
-//  ctx.strokeStyle = "yellow";
+  ctx.strokeStyle = "yellow";
   this.strokeCenterline(ctx, port);
   this.strokeOutline(ctx, port);
 };
 
 GDS.Sref.prototype.drawOn = function (ctx, port) {
-  ctx.save();
   const mat = this.transform();
+  ctx.save();
+  port.pushTransform(mat);
   ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-
+  
+  ctx.strokeStyle = "black";
+  ctx._structureView.drawStructure(ctx, port, this.refStructure);
+  
+  ctx.restore();
+  port.popTransform();
   ctx.strokeStyle = "blue";
   GDS.strokeSlantCross(ctx, port, this.x, this.y);
-  ctx.strokeStyle = "brown";
-  ctx._structureView.drawStructure(ctx, port, this.refStructure);
-
-  ctx.restore();
 };
 
 GDS.Aref.prototype.drawOn = function (ctx, port) {
+  if (this.refName === 'PC' && this.hash.elkey === 5) {
+    const debug = true;
+  }
   for (let mat of this.repeatedTransforms()) {
     ctx.save();
+    port.pushTransform(mat);
     ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-    ctx.strokeStyle = "red";
-    GDS.strokeSlantCross(ctx, port, this.x, this.y);
+   
     ctx.strokeStyle = "brown";
     ctx._structureView.drawStructure(ctx, port, this.refStructure);
-
+    
+    port.popTransform();
     ctx.restore();
+    ctx.strokeStyle = "orange";
+    GDS.strokeSlantCross(ctx, port, mat.tx, mat.ty);
   }
+  ctx.strokeStyle = "red";
+  GDS.strokeSlantCross(ctx, port, this.x, this.y);
 };
 
 GDS.Point.prototype.drawOn = function (ctx, port) {
-  const unit = 3;
-  ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.lineWidth = 1;
-  const devicePoint = port.worldToDevice(this.vertices()[0][0], this.vertices()[0][1]);
-  devicePoint.x = Math.round(devicePoint.x) + 0.5;
-  devicePoint.y = Math.round(devicePoint.y) + 0.5;
-  ctx.beginPath();
-  ctx.strokeStyle = "blue";
-  ctx.moveTo(devicePoint.x - unit, devicePoint.y - unit);
-  ctx.lineTo(devicePoint.x + unit, devicePoint.y + unit);
-  ctx.moveTo(devicePoint.x - unit, devicePoint.y + unit);
-  ctx.lineTo(devicePoint.x + unit, devicePoint.y - unit);
-  ctx.closePath();
-  ctx.stroke();
-  ctx.restore();
+  GDS.strokePoints(ctx, port, this.x, this.y);
 };
 
 
@@ -181,11 +191,23 @@ GDS.StructureView = class {
     this.port = new GEO.Viewport(this.ctx.canvas.width, this.ctx.canvas.height);
     this.track = new GDS.Tracking(self);
     this.port.portDamageFunction = function (port) {
-      self.redraw(port);
+      if (port.transformDepth === 0) {
+        self.needsRedraw = true;
+      }
     };
-    this.transfomFunction = function () {
-      return self.ctx.getTransform();
-    };
+    if (false) {
+      this.port.transformFunction = function () {
+        const domMat = self.ctx.getTransform();
+        const createjsMat = new createjs.Matrix2D();
+        createjsMat.a = domMat.a;
+        createjsMat.b = domMat.b;
+        createjsMat.c = domMat.c;
+        createjsMat.d = domMat.d;
+        createjsMat.tx = domMat.e;
+        createjsMat.ty = domMat.f;
+        return createjsMat;
+      };
+    }
   }
   
   context() {
@@ -199,18 +221,28 @@ GDS.StructureView = class {
     this.context().canvas.addEventListener("mousemove", proc);
   }
 
-  redraw(port) {
+  redraw() {
+    if (this.needsRedraw) {
+      this.fullDraw();
+      this.needsRedraw = false;
+    }
+  }
+
+  fullDraw() {
     const ctx = this.context();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = "lightGray";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const mat = port.transform();
+    const mat = this.port.transform();
     if (this._structure === null) {
       return;
     }
+    // this.port._basicTransform = mat;
     ctx.setTransform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-    ctx.lineWidth = 1 / port.scale;
-    this.drawStructure(ctx, port, this._structure);
+    ctx.lineWidth = 1 / this.port.scale;
+    ctx.strokeStyle = 'black';
+    this.drawStructure(ctx, this.port, this._structure);
+ 
   }
 
   drawStructure(ctx, port, structure) {
@@ -219,8 +251,7 @@ GDS.StructureView = class {
 
   drawElements(ctx, port, elements) {
     elements.forEach(function (e) {
-      ctx.strokeStyle = "black";
-      e.drawOn(ctx, port);
+     e.drawOn(ctx, port);
     });
   }
 

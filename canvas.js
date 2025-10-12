@@ -53,6 +53,9 @@ function loadIt() {
   });
 
   gStructureView.fit();
+  setInterval(function(){
+    gStructureView.redraw();
+  },100);
 }
 
 function adjustPortSize() {
