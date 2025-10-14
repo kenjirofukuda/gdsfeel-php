@@ -1,7 +1,7 @@
 #+TITLE: gdsfeel-php
 #+AUTHOR: kenjirofukuda@gmail.com
 
-GDSII ビューワーの PHP 実装です。
+GDSII ビューワー([[GdsFeel]])の PHP 実装です。
 
 Web関連の技術の実務経験がないため、2025年10月から
 - PHP
@@ -11,9 +11,6 @@ Web関連の技術の実務経験がないため、2025年10月から
 アプリケーションのジャンルとしては永続型のほうが相性が良いのですが PHP学習の素材として実装してみました。
 
 ビューワーそのものはcanvas描画のため、実質的にはJavaScriptです。
-
-Projectの土台は、NetBeansで作成してvscode（今回学習中）で手直ししながら進めています。
-vscodeに慣れていないため、Emacs,viがまだ欠かせません。
 
 ** 着手
 - crash/ ディレクトリにて練習中
