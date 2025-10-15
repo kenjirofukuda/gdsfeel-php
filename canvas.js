@@ -14,11 +14,12 @@ let gQueue = null;
 let gWaitMSecs = 300;
 
 function loadIt() {
-  $("#canvas-wrapper").css("display", "block");
+//  $("#canvas-wrapper").css("display", "flex");
   window.addEventListener("resize", function () {
     clearTimeout(gQueue);
     gQueue = setTimeout(function () {
       adjustPortSize();
+      adjustRowCenter();
     }, gWaitMSecs);
   }, false);
 
@@ -58,6 +59,16 @@ function loadIt() {
   },100);
 }
 
+function adjustRowCenter() {
+  let container_height = $("#container").height();
+  let row1_height = $("#row1").height();
+  let row3_height = $("#row3").height();
+//  $("#row2").height(window.innerHeight - (row1_height + row3_height));
+  $("#row2").height(0);
+  $("#canvas-wrapper").height(0);
+}
+
+
 function adjustPortSize() {
   let w = $("#canvas-wrapper").width();
   let h = $("#canvas-wrapper").height();
@@ -66,8 +77,7 @@ function adjustPortSize() {
   if (gStructureView) {
     gStructureView.port.setSize(w, h);
   }
-  $("#canvas-wrapper").css("display", "block");
-
+  $("#canvas-wrapper").css("display", "flex");
 }
 
 function msg(s) {

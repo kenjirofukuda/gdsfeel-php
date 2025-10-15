@@ -60,131 +60,122 @@ if ($struc_name) {
 <head>
   <meta charset="UTF-8">
   <title>GdsFeel2</title>
-  <link rel="stylesheet" href="./css/styles.css">
+  <!-- <link rel="stylesheet" href="./css/styles.css"> -->
+  <!-- <script src="https://cdn.tailwindcss.com"></script>
+  -->
+  <link rel="stylesheet" href="./css/styles2.css">
   <?php include_once './partial/header_scripts.php'; ?>
   <script src="lib_data.js"></script>
   <script src="canvas.js"></script>
 </head>
 
 <body onload="loadIt()">
-  <div id="struc_name" style="visibility: hidden;"><?= $struc_name ?></div>
+  <div id="container" class="box max-h-full">
+    <div id="row1" class="header row">
+      <div id="struc_name" style="visibility: hidden;"><?= $struc_name ?></div>
 
-  <?php
-  $head = $lib->name;
-  if ($struc_name) {
-    $head .= '/' . $struc_name;
-  }
-  ?>
+      <?php
+      $head = $lib->name;
+      if ($struc_name) {
+        $head .= '/' . $struc_name;
+      }
+      ?>
 
-  <div id="prefs">
-    <?=
-    html_tag(
-      'form',
-      ['action' => '', 'method' => 'post'],
-      join([
-        prefs_contents(),
+      <div id="prefs">
+        <?=
         html_tag(
-          'div',
-          null,
-          html_tag('input', ['type' => 'submit', 'value' => 'Save'])
-        )
-      ])
-    );
-    ?>
-  </div>
-
-  <h1><?= $head ?></h1>
-  <div id="container" class="container">
-    <div id="struclist" class="scroll_lists">
-      <ul class="no-bullets nav-list-vivid">
-        <?php foreach ($lib->structures() as $each) { ?>
-          <?php
-          $li_class = '';
-          if ($each->name == $struc_name) {
-            $li_class = 'selected';
-          }
-          ?>
-          <li class="<?= $li_class ?>">
-            <a class="<?= $li_class ?>" href="./index.php?s=<?= $each->name ?>">
-              <?= $each->name ?>
-            </a>
-          </li>
-        <?php } ?>
-      </ul>
-    </div>
-
-    <?php if ($prefs['shows_element_list']['value']) : ?>
-      <div id="elementlist" class="scroll_lists">
-        <?php
-        if ($struc_name) {
-          echo '<ul class="no-bullets nav-list-vivid">', PHP_EOL;
-          $struc = $lib->structureNamed($struc_name);
-          foreach ($struc->elements() as $el) {
-            $li_class = 'gelement';
-            if ($element && $el->elkey == $elkey) {
-              $li_class .= ' selected';
-            }
-            $attr = [];
-            $attr['s'] = $struc_name;
-            $attr['e'] = $el->elkey;
-            echo html_tag(
-              'li',
-              ['class' => $li_class],
-              html_tag(
-                'a',
-                [
-                  'class' => $li_class,
-                  'href' => './index.php?' . http_build_query($attr),
-                  'data-el-key' =>  $el->elkey 
-                ],
-                $el
-              )
-            ), PHP_EOL;
-          }
-          echo "</ul>", PHP_EOL;
-        }
+          'form',
+          ['action' => '', 'method' => 'post'],
+          join([
+            prefs_contents(),
+            html_tag(
+              'div',
+              null,
+              html_tag('input', ['type' => 'submit', 'value' => 'Save'])
+            )
+          ])
+        );
         ?>
       </div>
-    <?php endif; ?>
-
-    <?php if (shows_element_inspector()) : ?>
-      <div id="elementinspector">
-        <div id="php_inspector">
-              <?= debug_out($element) ?>
-        </div>
-        <div id="js_inspector"></div>
-      </div>
-    <?php endif; ?>
-
-    <div id="canvas-wrapper" class="fills-remaining-width">
-      <?php include_once './partial/command_buttons.php'; ?>
-      <?php include_once './partial/coordinate_view.php'; ?>
-      <canvas id="canvas"></canvas>
+      <h1><?= $head ?></h1>
     </div>
 
-    <script>
-      const container = document.getElementById('canvas-wrapper');
-      const canvas = document.querySelector('canvas');
-      const ctx = canvas.getContext('2d');
+    <div id="row2" class="content row flex">
+      <div id="struc-list" class="flex vscroll">
+        <ul class="no-bullets nav-list-vivid">
+          <?php foreach ($lib->structures() as $each) { ?>
+            <?php
+            $li_class = '';
+            if ($each->name == $struc_name) {
+              $li_class = 'selected';
+            }
+            ?>
+            <li class="<?= $li_class ?>">
+              <a class="<?= $li_class ?>" href="./index.php?s=<?= $each->name ?>">
+                <?= $each->name ?>
+              </a>
+            </li>
+          <?php } ?>
+        </ul>
+      </div>
 
-      // draw();
-      function draw() {
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-        ctx.fillStyle = '#333';
-        ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(10, 20, 150, 250);
-      }
+      <?php if ($prefs['shows_element_list']['value']) : ?>
+        <div id="element-list" class="flex vscroll">
+          <?php
+          if ($struc_name) {
+            echo '<ul class="no-bullets nav-list-vivid">', PHP_EOL;
+            $struc = $lib->structureNamed($struc_name);
+            foreach ($struc->elements() as $el) {
+              $li_class = 'gelement';
+              if ($element && $el->elkey == $elkey) {
+                $li_class .= ' selected';
+              }
+              $attr = [];
+              $attr['s'] = $struc_name;
+              $attr['e'] = $el->elkey;
+              echo html_tag(
+                'li',
+                ['class' => $li_class],
+                html_tag(
+                  'a',
+                  [
+                    'class' => $li_class,
+                    'href' => './index.php?' . http_build_query($attr),
+                    'data-el-key' =>  $el->elkey
+                  ],
+                  $el
+                )
+              ), PHP_EOL;
+            }
+            echo "</ul>", PHP_EOL;
+          }
+          ?>
+        </div>
+      <?php endif; ?>
 
-      window.addEventListener('resize', () => {
-        //draw();
-      });
-    </script>
+      <?php if (shows_element_inspector()) : ?>
+        <div id="element-inspector" class="flex vscroll">
+          <div id="php_inspector">
+            <?= debug_out($element) ?>
+          </div>
+          <div id="js_inspector"></div>
+        </div>
+      <?php endif; ?>
 
-
+      <div id="box-right" class="flex ">
+        <?php include_once './partial/command_buttons.php'; ?>
+        <?php include_once './partial/coordinate_view.php'; ?>
+        <div id="canvas-wrapper">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div id="row3" class="row footer">
+      <p><b>footer</b> (fixed height)</p>
+    </div>
   </div>
 </body>
+
 
 </html>
 

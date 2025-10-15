@@ -1,4 +1,4 @@
-<div>
+<div >
   <code>
     h: <span id="deviceX">0</span>, v: <span id="deviceY">0</span>
   </code>

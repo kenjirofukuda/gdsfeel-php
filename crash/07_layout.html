@@ -1,51 +1,54 @@
 <html class="dark">
-  <head>
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-      html,
-body {
-  height: 100%;
-  margin: 0;
-}
+<head>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
-.box {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-}
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
 
-.box .row {
-  border: 1px dotted rgb(224, 48, 48);
-}
+    .box {
+      display: flex;
+      flex-flow: column;
+      height: 100%;
+    }
 
-.box .row.header {
-  flex: 0 1 auto;
-  /* The above is shorthand for:
+    .box .row {
+      border: 1px dotted rgb(224, 48, 48);
+    }
+
+    .box .row.header {
+      flex: 0 1 auto;
+      /* The above is shorthand for:
   flex-grow: 0,
   flex-shrink: 1,
   flex-basis: auto
   */
-}
+    }
 
-.box .row.content {
-  flex: 1 1 auto;
-}
+    .box .row.content {
+      flex: 1 1 auto;
+    }
 
-.box .row.footer {
-  flex: 0 1 40px;
-}
-    </style>
-  </head>
-  <body class="">
-    <div id="container" class="box">
-      <div class="row content bg-blue-100 text-center">
-        <b>content</b>
+    .box .row.footer {
+      flex: 0 1 40px;
+    }
+  </style>
+</head>
+
+<body class="">
+  <div id="container" class="box">
+    <div class="row content bg-blue-100 text-center">
+      <b>content</b>
       (fills remaining space)
-      </div>
-      <div class="row footer bg-gray-400" >
-        <p><b>footer</b> (fixed height)</p>
-      </div>
     </div>
-  </body>
+    <div class="row footer bg-gray-400">
+      <p><b>footer</b> (fixed height)</p>
+    </div>
+  </div>
+</body>
+
 </html>

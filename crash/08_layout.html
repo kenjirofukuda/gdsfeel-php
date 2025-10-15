@@ -1,0 +1,101 @@
+<html class="dark">
+
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- @see https://qiita.com/hrtk91/items/0144c42a5a5ce38c8d38 -->
+  <div id="grand-parent" class="m-4 p-2 border-4 border-zinc-600">
+    <!-- max-h-full追加 -->
+    <div id="parent" class="flex grow border-2 border-slate-400 p-4 gap-2 max-h-full">
+
+      <div id="child1" class="border-2 border-purple-400 w-24 p-2">
+        <ul>
+          <li>item</li>
+          <li>item</li>
+        </ul>
+      </div>
+
+      <!-- overflow-auto, max-h-full, basis-0,shrink追加 -->
+      <!-- kenjirofukuda@gmail.com basis-0 を入れると横幅が0になり表示されない。よって削除 -->
+      <div id="child2" class="flex flex-col overflow-auto shrink border-2 border-pink-400 w-24 p-2">
+        <ul>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+          <li>item</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
