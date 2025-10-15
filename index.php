@@ -171,7 +171,7 @@ if ($struc_name) {
       </div>
     </div>
     <div id="row3" class="row footer">
-      <p><b>footer</b> (fixed height)</p>
+      <p><b>states area</b> (reserved)</p>
     </div>
   </div>
 </body>

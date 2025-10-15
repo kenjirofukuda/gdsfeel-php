@@ -56,7 +56,7 @@ li.selected {
 }
 
 .box .row.footer {
-  flex: 0 1 40px;
+  flex: 0 1 16px;
 }
 
 .flex {
@@ -130,3 +130,5 @@ li.selected {
 #row2 {
   height: 0px;
 }
+
+

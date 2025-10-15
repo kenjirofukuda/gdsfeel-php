@@ -71,7 +71,7 @@ GDS.Path.prototype.strokeOutline = function (ctx, port) {
 };
 
 GDS.Path.prototype.drawOn = function (ctx, port) {
-  ctx.strokeStyle = "yellow";
+  ctx.strokeStyle = "black";
   this.strokeCenterline(ctx, port);
   this.strokeOutline(ctx, port);
 };

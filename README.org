@@ -3,6 +3,8 @@
 
 GDSII ビューワー([[https://github.com/kenjiropfukuda/gdsfeel-common.git][GdsFeel]])の PHP 実装です。
 
+[[./gdsfeel-php.png]]
+
 Web関連の技術の実務経験がないため、2025年10月から
 - PHP
 - JavaScript
@@ -12,12 +14,24 @@ Web関連の技術の実務経験がないため、2025年10月から
 
 ビューワーそのものはcanvas描画のため、実質的にはJavaScriptです。
 
+* 実行
+
+#+begin_src bash
+  cd gdsfeel-php/
+  php -S localhost:8080
+#+end_src
+
+* その他
 ** 着手
 - crash/ ディレクトリにて練習中
 
+** 着手（未反映）
+- レイヤーの自動カラー割当
+
 ** 未着手
+- 初期設定の別画面化
 - PHP開発に求められている階層構造の整理
 - マルチユーザー対応
 - データーベース連携
 - UnitTest
-  
+- Laravel採用
