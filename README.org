@@ -1,7 +1,7 @@
 #+TITLE: gdsfeel-php
 #+AUTHOR: kenjirofukuda@gmail.com
 
-GDSII ビューワー([[https://github.com/kenjiropfukuda/gdsfeel-common.git][GdsFeel]])の PHP 実装です。
+GDSII ビューワー([[https://github.com/kenjirofukuda/gdsfeel-common.git][GdsFeel]])の PHP 実装です。
 
 [[./gdsfeel-php.png]]
 
@@ -12,7 +12,11 @@ Web関連の技術の実務経験がないため、2025年10月から
 
 アプリケーションのジャンルとしては永続型のほうが相性が良いのですが PHP学習の素材として実装してみました。
 
-ビューワーそのものはcanvas描画のため、実質的にはJavaScriptです。
+ビューワーそのものはcanvas描画のため、PHPとうたいながらも実質的にはJavaScript実装です。
+
+技術的な詳細開設は
+https://deepwiki.com/kenjirofukuda/gdsfeel-php
+に丸投げしています。
 
 * 実行
 
@@ -24,14 +28,15 @@ Web関連の技術の実務経験がないため、2025年10月から
 * その他
 ** 着手
 - crash/ ディレクトリにて練習中
-
-** 着手（未反映）
-- レイヤーの自動カラー割当
-
-** 未着手
-- 初期設定の別画面化
+*** Laravelレイアウトに移行中
+- [[https://github.com/kenjirofukuda/gdsfeel-php2]]
 - PHP開発に求められている階層構造の整理
 - マルチユーザー対応
 - データーベース連携
 - UnitTest
-- Laravel採用
+
+** 着手（未反映）
+- レイヤーの自動カラー割当
+  
+** 未着手
+- 初期設定の別画面化
