@@ -14,7 +14,7 @@ Web関連の技術の実務経験がないため、2025年10月から
 
 ビューワーそのものはcanvas描画のため、PHPとうたいながらも実質的にはJavaScript実装です。
 
-技術的な詳細開設は
+技術的な詳細解説は
 https://deepwiki.com/kenjirofukuda/gdsfeel-php
 に丸投げしています。
 
