@@ -1,7 +1,7 @@
 #+TITLE: gdsfeel-php
 #+AUTHOR: kenjirofukuda@gmail.com
 
-GDSII ビューワー([[https://github.com/kenjirofukuda/gdsfeel-common.git][GdsFeel]])の PHP 実装です。
+GDSII ビューワー([[https://github.com/kenjirofukuda/gdsfeel-common][GdsFeel]])の PHP 実装です。
 
 [[./gdsfeel-php.png]]
 
