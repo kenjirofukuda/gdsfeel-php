@@ -64,7 +64,7 @@ if ($struc_name) {
   <!-- <script src="https://cdn.tailwindcss.com"></script>
   -->
   <link rel="stylesheet" href="./css/styles2.css">
-  <?php include_once './partial/header_scripts.php'; ?>
+  <?php include_once './partial/header_scripts2.php'; ?>
   <script src="lib_data.js"></script>
   <script src="canvas.js"></script>
 </head>

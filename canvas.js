@@ -3,17 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-/* global GDS, GEO, createjs, Snap */
-"use strict";
-
 let gLibrary = null;
 let gStructure = null;
 let gStructureView = null;
 let gQueue = null;
 let gWaitMSecs = 300;
 
-function loadIt() {
+/* export */ function loadIt() {
 //  $("#canvas-wrapper").css("display", "flex");
   window.addEventListener("resize", function () {
     clearTimeout(gQueue);
@@ -88,3 +84,13 @@ function msg(s) {
   console.log(s);
 }
 
+function floatConvertSyncer(num, dig) {
+  const p = Math.pow(10, dig);
+  return Math.round(num * p) / p;
+}
+
+Number.prototype.roundDigits = function (dig) {
+  return floatConvertSyncer(this, dig);
+};
+
+window.loadIt = loadIt;

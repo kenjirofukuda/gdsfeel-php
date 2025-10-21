@@ -3,7 +3,7 @@
 
 GDSII ビューワー([[https://github.com/kenjirofukuda/gdsfeel-common][GdsFeel]])の PHP 実装です。
 
-[[./gdsfeel-php.png]]
+[[https://raw.githubusercontent.com/kenjirofukuda/public-images/refs/heads/main/gdsfeel-php.png]]
 
 Web関連の技術の実務経験がないため、2025年10月から
 - PHP
@@ -22,11 +22,13 @@ https://deepwiki.com/kenjirofukuda/gdsfeel-php
 
 #+begin_src bash
   cd gdsfeel-php/
-  php -S localhost:8080
+  comporser dev run &
+  # open browser http://localhost:8080
 #+end_src
 
 * その他
 ** 着手
+- [[https://github.com/kenjirofukuda/gdsfeel-js][gdsfeel-js]] のtypescriptからの生成した js を ts-dist/に配置して様子見
 - crash/ ディレクトリにて練習中
 *** Laravelレイアウトに移行中
 - [[https://github.com/kenjirofukuda/gdsfeel-php2]]
