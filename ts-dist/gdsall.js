@@ -117,6 +117,7 @@ var GEO;
         Viewport.prototype.moveCenter = function (deltaX, deltaY) {
             this.centerX += deltaX;
             this.centerY += deltaY;
+            this._damageTransform();
         };
         Viewport.prototype.setSize = function (width, height) {
             this.width = width;
@@ -145,12 +146,12 @@ var GEO;
             return this._invertTransform;
         };
         Viewport.prototype.deviceToWorld = function (h, v) {
-            //    const result = MakePoint(0, 0);
-            return this.invertTransform().transformPoint(h, v /*, result */);
+            var result = MakePoint(0, 0);
+            return this.invertTransform().transformPoint(h, v, result);
         };
         Viewport.prototype.worldToDevice = function (x, y) {
-            //  const result = GEO.MakePoint();
-            return this.transform().transformPoint(x, y);
+            var result = MakePoint(0, 0);
+            return this.transform().transformPoint(x, y, result);
         };
         Viewport.prototype.pushTransform = function (transform) {
             this.transformStack.push(transform);
@@ -708,9 +709,6 @@ var GDS;
         var theta = (alpha + beta + Math.PI) / 2.0;
         if (Math.abs(Math.cos((alpha - beta) / 2.0)) < GEO.EPS) {
             throw new Error('Internal algorithm error: cos((alpha - beta)/2) = 0');
-            result[0] = 0.0;
-            result[1] = 0.0;
-            return result;
         }
         var r = hw / Math.cos((alpha - beta) / 2.0);
         result[0] = r * Math.cos(theta);
