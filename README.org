@@ -42,3 +42,26 @@ https://deepwiki.com/kenjirofukuda/gdsfeel-php
   
 ** 未着手
 - 初期設定の別画面化
+
+* Debian 13移行時のトラブル
+#+begin_example
+> @php -S localhost:8080
+[Tue Dec  2 08:56:44 2025] PHP 8.4.11 Development Server (http://localhost:8080) started
+[Tue Dec  2 08:56:50 2025] [::1]:55780 Accepted
+[Tue Dec  2 08:56:50 2025] PHP Fatal error:  Cannot redeclare function array_find() in /home/kenjiro/Nextcloud/prove/php-room/gdsfeel-php/std/utils.php on line 15
+[Tue Dec  2 08:56:50 2025] [::1]:55780 [500]: GET / - Cannot redeclare function array_find() in /home/kenjiro/Nextcloud/prove/php-room/gdsfeel-php/std/utils.php on line 15
+[Tue Dec  2 08:56:50 2025] [::1]:55780 Closing
+[Tue Dec  2 08:56:50 2025] [::1]:55782 Accepted
+[Tue Dec  2 08:56:54 2025] PHP Fatal error:  Cannot redeclare function array_find() in /home/kenjiro/Nextcloud/prove/php-room/gdsfeel-php/std/utils.php on line 15
+[Tue Dec  2 08:56:54 2025] [::1]:55782 [500]: GET / - Cannot redeclare function array_find() in /home/kenjiro/Nextcloud/prove/php-room/gdsfeel-php/std/utils.php on line 15
+[Tue Dec  2 08:56:54 2025] [::1]:55782 Closing
+[Tue Dec  2 08:56:54 2025] [::1]:55798 Accepted
+#+end_example
+
+以下のガードでphp8.3には無かったポリフィル array_find ()の衝突を回避
+
+#+begin_src php
+  if (defined('PHP_VERSION') && version_compare(PHP_VERSION, '8.4.0', '<')) {
+      ...
+  }
+#+end_src

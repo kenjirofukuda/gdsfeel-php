@@ -1,5 +1,8 @@
 <?php
 
+
+if (defined('PHP_VERSION') && version_compare(PHP_VERSION, '8.4.0', '<')) {
+
 /**
  * Porting of PHP 8.4 function
  *
@@ -21,6 +24,8 @@ function array_find(array $array, callable $callback): mixed
   }
   return null;
 }
+
+} // defined
 
 
 /**
